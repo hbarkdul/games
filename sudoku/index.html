@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="数独">
 <meta name="theme-color" content="#e6e0cf">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem("sdk-theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}catch(e){}</script>
+<script>try{if(localStorage.getItem("dys")=="1")document.documentElement.setAttribute("data-dys","")}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Zen+Dots&family=Zen+Kaku+Gothic+New:wght@500;700&family=Zen+Antique&family=Hina+Mincho&family=Reggae+One&family=Dela+Gothic+One&family=Potta+One&family=Yusei+Magic&family=Kaisei+Tokumin&family=Kiwi+Maru&display=swap" rel="stylesheet">
@@ -50,6 +51,11 @@
 :root[data-theme="koi"]{--bg:#0c2127;--paper:#12333b;--ink:#f7f3ea;--sub:#f5a623;--line:#285561;--thick:#f7f3ea;--accent:#f26a1d;--ring:#f26a1d;--sel:#9a4a1e;--peer:#1b434c;--same:#6b3d17;--err:#ff5a4a;--wave:#4aa3ad;--waveo:0.14;--pat:url(#rp);--disp:"Yusei Magic",sans-serif;--num:"Yusei Magic",sans-serif;--glow:none;--bshadow:0 0 22px rgba(242,106,29,.45);--btn:#12333b;--btnink:#f7f3ea;--sealbg:#f26a1d;--sealfg:#0c2127;--sealr:50%;--onacc:#0c2127}
 :root[data-theme="imperial"]{--bg:#1a0f2e;--paper:#271645;--ink:#f5ecd2;--sub:#d6ad34;--line:#3d2a63;--thick:#d6ad34;--accent:#8e47c8;--ring:#d6ad34;--sel:#5b2f8f;--peer:#2b1a4a;--same:#6b5518;--err:#ff6a5a;--wave:#d6ad34;--waveo:0.1;--pat:url(#ki);--disp:"Kaisei Tokumin",serif;--num:"Kaisei Tokumin",serif;--glow:none;--bshadow:0 0 0 3px #1a0f2e,0 0 0 5px #d6ad34;--btn:#271645;--btnink:#f5ecd2;--sealbg:#d6ad34;--sealfg:#1a0f2e;--sealr:50%;--onacc:#f5ecd2}
 :root[data-theme="kitsune"]{--bg:#14122a;--paper:#201c3d;--ink:#f6efe6;--sub:#7fe3ff;--line:#3a3466;--thick:#e8561a;--accent:#e8561a;--ring:#7fe3ff;--sel:#7a3a22;--peer:#272250;--same:#1f5f7a;--err:#ff6b5a;--wave:#7fe3ff;--waveo:0.1;--pat:url(#sg);--disp:"Kiwi Maru",serif;--num:"Kiwi Maru",serif;--glow:0 0 7px currentColor;--bshadow:0 0 24px rgba(127,227,255,.35);--btn:#201c3d;--btnink:#f6efe6;--sealbg:#e8561a;--sealfg:#f6efe6;--sealr:50%;--onacc:#ffffff}
+@font-face{font-family:"OpenDyslexic";font-style:normal;font-weight:400;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-400-normal.woff2) format("woff2"),url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-400-normal.woff) format("woff")}
+@font-face{font-family:"OpenDyslexic";font-style:normal;font-weight:700;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-700-normal.woff2) format("woff2"),url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-700-normal.woff) format("woff")}
+:root[data-dys][data-theme]{--ui:"OpenDyslexic","Zen Kaku Gothic New",sans-serif;--disp:"OpenDyslexic","Zen Kaku Gothic New",sans-serif;--num:"OpenDyslexic","Zen Kaku Gothic New",sans-serif}
+.dysbtn{flex:none;width:34px;height:34px;border:2px solid var(--ink);border-radius:50%;background:transparent;color:var(--ink);font:800 13px var(--ui);padding:0}
+.dysbtn.on{background:var(--ink);color:var(--bg)}
 html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--ui);touch-action:manipulation;
@@ -133,6 +139,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
       <option value="light">Woodblock 浮世絵</option><option value="dark">Neon ネオン</option>
       <option value="samurai">Samurai 侍</option><option value="ninja">Ninja 忍</option><option value="geisha">Geisha 芸者</option><option value="kabuki">Kabuki 歌舞伎</option><option value="dragon">Dragon 龍</option><option value="koi">Koi 鯉</option><option value="imperial">Imperial 皇室</option><option value="kitsune">Kitsune 狐</option>
     </select></div>
+    <button id="dys" class="dysbtn" aria-pressed="false" title="Dyslexia-friendly font (OpenDyslexic)">Aa</button>
   </header>
   <div class="info"><span id="lvl"></span><span id="mist"></span><b id="time">0:00</b></div>
   <div id="board" role="grid" aria-label="Sudoku board"></div>
@@ -297,6 +304,14 @@ function setTheme(t,persist){
 $('#theme').onchange=e=>setTheme(e.target.value,true);
 let th=null;try{th=localStorage.getItem('sdk-theme')}catch(e){}
 setTheme(th||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'),false);
+function setDys(on,save){
+  document.documentElement.toggleAttribute('data-dys',on);
+  const b=$('#dys');b.setAttribute('aria-pressed',on);b.classList.toggle('on',on);
+  if(save)try{localStorage.setItem('dys',on?'1':'0')}catch(e){}
+}
+$('#dys').onclick=()=>setDys(!document.documentElement.hasAttribute('data-dys'),true);
+try{setDys(localStorage.getItem('dys')=='1',false)}catch(e){}
+
 
 try{const s=JSON.parse(localStorage.getItem('sdk1'));if(s&&s.v&&s.v.length===81&&!s.done)S=s}catch(e){}
 if(S){render();startTimer()}

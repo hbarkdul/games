@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="崩し">
 <meta name="theme-color" content="#e6e0cf">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem("bb-t")||"light"}catch(e){}</script>
+<script>try{if(localStorage.getItem("dys")=="1")document.documentElement.setAttribute("data-dys","")}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;800&family=Zen+Dots&family=Zen+Kaku+Gothic+New:wght@500;700&family=Zen+Antique&family=Hina+Mincho&family=Reggae+One&family=Dela+Gothic+One&family=Potta+One&family=Yusei+Magic&family=Kaisei+Tokumin&family=Kiwi+Maru&display=swap" rel="stylesheet">
@@ -24,6 +25,11 @@
 [data-theme="koi"]{--bg:#0c2127;--ink:#f7f3ea;--accent:#f26a1d;--edge:#f7f3ea;--btn:#12333b;--wave:#4aa3ad;--waveo:0.14;--pat:url(#rp);--disp:"Yusei Magic",sans-serif;--face:#f7f3ea;--b1:#f26a1d;--b2:#f7f3ea;--b3:#1c1c1c;--gl:0}
 [data-theme="imperial"]{--bg:#1a0f2e;--ink:#f5ecd2;--accent:#8e47c8;--edge:#d6ad34;--btn:#271645;--wave:#d6ad34;--waveo:0.1;--pat:url(#ki);--disp:"Kaisei Tokumin",serif;--face:#f5ecd2;--b1:#8e47c8;--b2:#d6ad34;--b3:#c8321f;--gl:0}
 [data-theme="kitsune"]{--bg:#14122a;--ink:#f6efe6;--accent:#e8561a;--edge:#7fe3ff;--btn:#201c3d;--wave:#7fe3ff;--waveo:0.1;--pat:url(#sg);--disp:"Kiwi Maru",serif;--face:#f6efe6;--b1:#e8561a;--b2:#f6efe6;--b3:#7fe3ff;--gl:7}
+@font-face{font-family:"OpenDyslexic";font-style:normal;font-weight:400;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-400-normal.woff2) format("woff2"),url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-400-normal.woff) format("woff")}
+@font-face{font-family:"OpenDyslexic";font-style:normal;font-weight:700;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-700-normal.woff2) format("woff2"),url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-700-normal.woff) format("woff")}
+:root[data-dys][data-theme]{--ui:"OpenDyslexic","Zen Kaku Gothic New",sans-serif;--disp:"OpenDyslexic","Zen Kaku Gothic New",sans-serif;--num:"OpenDyslexic","Zen Kaku Gothic New",sans-serif}
+.dysbtn{flex:none;width:34px;height:34px;border:2px solid var(--ink);border-radius:50%;background:transparent;color:var(--ink);font:800 13px var(--ui);padding:0}
+.dysbtn.on{background:var(--ink);color:var(--bg)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
 body{display:grid;place-items:center;background:var(--bg);color:var(--ink);font-family:var(--ui);overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
@@ -57,7 +63,7 @@ const MAPS=[
 ['..22.22..','.2332332.','233.1.332','.2332332.','..22.22..']];
 const PU={m:['多','Multi-ball'],w:['広','Wide paddle'],s:['遅','Slow ball'],f:['火','Fireball'],l:['雷','Laser'],c:['粘','Catch'],h:['命','Extra life']},BAG='mmwwwssffllcch';
 const TH=[['light','Woodblock 浮世絵','#e6e0cf'],['dark','Neon ネオン','#0b0820'],['samurai','Samurai 侍','#100d0b'],['ninja','Ninja 忍','#0a0c0f'],['geisha','Geisha 芸者','#efd5d6'],['kabuki','Kabuki 歌舞伎','#f3ece0'],['dragon','Dragon 龍','#06121d'],['koi','Koi 鯉','#0c2127'],['imperial','Imperial 皇室','#1a0f2e'],['kitsune','Kitsune 狐','#14122a']];
-let st='menu',prev='play',lv=1,sc=0,lives=3,combo=1,P,balls=[],bricks=[],pups=[],las=[],parts=[],eff={},ban=null,tx=W/2,hi=0,last=0,cd=0,pal={},keys={};
+let UIF='"Zen Kaku Gothic New",sans-serif',st='menu',prev='play',lv=1,sc=0,lives=3,combo=1,P,balls=[],bricks=[],pups=[],las=[],parts=[],eff={},ban=null,tx=W/2,hi=0,last=0,cd=0,pal={},keys={};
 try{hi=+localStorage.getItem('bb-hi')||0}catch(e){}
 const BW=W/9,BH=20,TOP=64,spd=()=>(300+Math.min(lv,20)*18)*(eff.s>0?.65:1),rnd=(a,b)=>a+Math.random()*(b-a);
 const nb=()=>({x:P.x,y:P.y-9,vx:0,vy:0,r:7,st:1,o:0});
@@ -162,14 +168,14 @@ function draw(){
   g.fillStyle=pal.acc;for(const l of las)g.fillRect(l.x-1.5,l.y,3,12);
   for(const p of parts){g.globalAlpha=Math.min(1,p.t*2);g.fillStyle=pal.b[p.c-1];g.fillRect(p.x,p.y,3.5,3.5)}
   g.globalAlpha=1;
-  g.fillStyle=pal.ink;g.font='700 15px "Zen Kaku Gothic New",sans-serif';g.textAlign='left';g.fillText('SCORE '+sc,12,20);
+  g.fillStyle=pal.ink;g.font='700 15px '+UIF;g.textAlign='left';g.fillText('SCORE '+sc,12,20);
   g.textAlign='center';g.fillText('Lv '+lv,W/2,20);
   g.textAlign='left';g.fillStyle=pal.acc;g.fillText('♥'.repeat(lives),12,44);
   if(combo>1){g.textAlign='center';g.fillText('COMBO ×'+combo,W/2,44)}
-  g.textAlign='right';g.fillStyle=pal.ink;g.font='700 13px "Zen Kaku Gothic New",sans-serif';
+  g.textAlign='right';g.fillStyle=pal.ink;g.font='700 13px '+UIF;
   let ex=W-48;for(const k in eff)if(eff[k]>0){g.fillText(PU[k][0]+Math.ceil(eff[k]),ex,44);ex-=40}
   if(ban){g.globalAlpha=Math.min(1,ban.t*2);g.textAlign='center';g.fillStyle=pal.acc;g.font='800 30px '+pal.disp;g.fillText(ban.s,W/2,H/2);g.globalAlpha=1}
-  if(st=='ready'){g.textAlign='center';g.fillStyle=pal.ink;g.font='700 14px "Zen Kaku Gothic New",sans-serif';g.fillText('Tap or press Space to launch',W/2,H-80)}
+  if(st=='ready'){g.textAlign='center';g.fillStyle=pal.ink;g.font='700 14px '+UIF;g.fillText('Tap or press Space to launch',W/2,H-80)}
 }
 function frame(t){
   requestAnimationFrame(frame);
@@ -181,7 +187,7 @@ function ui(h){const o=$('#ov');o.innerHTML=h;o.classList.add('show');$('#pb').s
 function hide(){$('#ov').classList.remove('show');$('#pb').style.display='block'}
 function menu(){
   st='menu';
-  ui(`<h1>崩し</h1><p>Kuzushi · Brick Breaker</p><button class="btn go" data-a="play">Play</button>
+  ui(`<h1>崩し</h1><p>Kuzushi · Brick Breaker</p><button class="btn go" data-a="play">Play</button><button class="btn" data-a="dys">${dysLabel()}</button>
   <select id="th" aria-label="Style">${TH.map(t=>`<option value="${t[0]}"${document.documentElement.dataset.theme==t[0]?' selected':''}>${t[1]}</option>`).join('')}</select>
   <p>Best score <b>${hi}</b></p><div class="legend">${Object.values(PU).map(p=>`<span><b>${p[0]}</b>${p[1]}</span>`).join('')}</div>
   <p>Drag, mouse or ←/→ to move<br>Tap or Space to launch</p>`);
@@ -193,13 +199,20 @@ function pause(){
   ui('<h1>休</h1><p>Paused</p><button class="btn go" data-a="resume">Resume</button><button class="btn" data-a="menu">Quit to menu</button>');
 }
 function resume(){st=prev;hide();last=0}
+function toggleDys(){
+  const on=!document.documentElement.hasAttribute('data-dys');
+  document.documentElement.toggleAttribute('data-dys',on);
+  try{localStorage.setItem('dys',on?'1':'0')}catch(e){}
+  (document.fonts&&document.fonts.load('16px OpenDyslexic')||Promise.resolve()).catch(()=>{}).then(()=>setTheme(document.documentElement.dataset.theme));
+}
+const dysLabel=()=>'Dyslexia font: '+(document.documentElement.hasAttribute('data-dys')?'On':'Off');
 function setTheme(t){
   document.documentElement.dataset.theme=t;try{localStorage.setItem('bb-t',t)}catch(e){}
   document.querySelector('meta[name=theme-color]').content=(TH.find(x=>x[0]==t)||TH[0])[2];
   const c=getComputedStyle(document.documentElement),v=n=>c.getPropertyValue(n).trim();
-  pal={ink:v('--ink'),acc:v('--accent'),face:v('--face'),edge:v('--edge'),b:[v('--b1'),v('--b2'),v('--b3')],gl:+v('--gl')||0,disp:v('--disp')};
+  pal={ink:v('--ink'),acc:v('--accent'),face:v('--face'),edge:v('--edge'),b:[v('--b1'),v('--b2'),v('--b3')],gl:+v('--gl')||0,disp:v('--disp')};UIF=v('--ui')||UIF;
 }
-$('#ov').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a;if(a=='play')play();else if(a=='menu')menu();else if(a=='resume')resume()};
+$('#ov').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a;if(a=='play')play();else if(a=='menu')menu();else if(a=='resume')resume();else if(a=='dys'){toggleDys();menu()}};
 $('#ov').onchange=e=>{if(e.target.id=='th')setTheme(e.target.value)};
 $('#pb').onclick=e=>{e.stopPropagation();pause()};
 const mx=e=>{const r=cv.getBoundingClientRect();tx=(e.clientX-r.left)/r.width*W};

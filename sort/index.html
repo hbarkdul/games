@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="注ぎ">
 <meta name="theme-color" content="#e6e0cf">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem("sp-t")||"light"}catch(e){}</script>
+<script>try{if(localStorage.getItem("dys")=="1")document.documentElement.setAttribute("data-dys","")}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;800&family=Zen+Dots&family=Zen+Kaku+Gothic+New:wght@500;700&family=Zen+Antique&family=Hina+Mincho&family=Reggae+One&family=Dela+Gothic+One&family=Potta+One&family=Yusei+Magic&family=Kaisei+Tokumin&family=Kiwi+Maru&display=swap" rel="stylesheet">
@@ -24,6 +25,11 @@
 [data-theme="koi"]{--bg:#0c2127;--ink:#f7f3ea;--accent:#f26a1d;--edge:#f7f3ea;--btn:#12333b;--wave:#4aa3ad;--waveo:0.14;--pat:url(#rp);--disp:"Yusei Magic",sans-serif;--glass:#ffffff14;--sat:1.1;--gl:0}
 [data-theme="imperial"]{--bg:#1a0f2e;--ink:#f5ecd2;--accent:#8e47c8;--edge:#d6ad34;--btn:#271645;--wave:#d6ad34;--waveo:0.1;--pat:url(#ki);--disp:"Kaisei Tokumin",serif;--glass:#ffffff14;--sat:1.05;--gl:0}
 [data-theme="kitsune"]{--bg:#14122a;--ink:#f6efe6;--accent:#e8561a;--edge:#7fe3ff;--btn:#201c3d;--wave:#7fe3ff;--waveo:0.1;--pat:url(#sg);--disp:"Kiwi Maru",serif;--glass:#ffffff14;--sat:1.1;--gl:7}
+@font-face{font-family:"OpenDyslexic";font-style:normal;font-weight:400;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-400-normal.woff2) format("woff2"),url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-400-normal.woff) format("woff")}
+@font-face{font-family:"OpenDyslexic";font-style:normal;font-weight:700;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-700-normal.woff2) format("woff2"),url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-700-normal.woff) format("woff")}
+:root[data-dys][data-theme]{--ui:"OpenDyslexic","Zen Kaku Gothic New",sans-serif;--disp:"OpenDyslexic","Zen Kaku Gothic New",sans-serif;--num:"OpenDyslexic","Zen Kaku Gothic New",sans-serif}
+.dysbtn{flex:none;width:34px;height:34px;border:2px solid var(--ink);border-radius:50%;background:transparent;color:var(--ink);font:800 13px var(--ui);padding:0}
+.dysbtn.on{background:var(--ink);color:var(--bg)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--ink);font-family:var(--ui);overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none}
@@ -203,7 +209,7 @@ function menu(){
   <div class="row"><span>Level</span><div class="seg"><button data-a="lm">−</button><button style="min-width:44px;pointer-events:none">${lv}</button><button data-a="lp">＋</button></div></div>
   <div class="row"><span>Free space</span><div class="seg"><button data-h="0" class="${hard?'':'on'}">2 vials · Normal</button><button data-h="1" class="${hard?'on':''}">1 vial · Hard</button></div></div>
   <select id="th" aria-label="Style">${TH.map(t=>`<option value="${t[0]}"${document.documentElement.dataset.theme==t[0]?' selected':''}>${t[1]}</option>`).join('')}</select>
-  <button class="btn" data-a="new">Start a new puzzle</button></div></div>`;
+  <button class="btn" data-a="dys">${dysLabel()}</button><button class="btn" data-a="new">Start a new puzzle</button></div></div>`;
   $('#ov').classList.add('show');
 }
 $('#ov').onclick=e=>{
@@ -213,7 +219,7 @@ $('#ov').onclick=e=>{
   else if(a=='again')start(lv,true);
   else if(a=='menu'){if(won){lv++;store('sp-l',lv);won=false;start(lv)}menu()}
   else if(a=='resume'){if(won)start(lv);else $('#ov').classList.remove('show')}
-  else if(a=='new')start(lv);
+  else if(a=='new')start(lv);else if(a=='dys'){toggleDys();menu()}
   else if(a=='lm'){lv=Math.max(1,lv-1);menu()}
   else if(a=='lp'){lv=Math.min(maxLv,lv+1);menu()}
 };
@@ -227,6 +233,13 @@ $('#bh').onclick=()=>{
   if(!p||!p.length)return toast('No hint available — try Undo or an extra vial');
   hl=p[0];sel=-1;render();setTimeout(()=>{hl=null;render()},2600);
 };
+function toggleDys(){
+  const on=!document.documentElement.hasAttribute('data-dys');
+  document.documentElement.toggleAttribute('data-dys',on);
+  try{localStorage.setItem('dys',on?'1':'0')}catch(e){}
+  (document.fonts&&document.fonts.load('16px OpenDyslexic')||Promise.resolve()).catch(()=>{}).then(()=>setTheme(document.documentElement.dataset.theme));
+}
+const dysLabel=()=>'Dyslexia font: '+(document.documentElement.hasAttribute('data-dys')?'On':'Off');
 function setTheme(t){
   document.documentElement.dataset.theme=t;store('sp-t',t);
   document.querySelector('meta[name=theme-color]').content=(TH.find(x=>x[0]==t)||TH[0])[2];

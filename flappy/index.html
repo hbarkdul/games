@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="羽ばたき">
 <meta name="theme-color" content="#e6e0cf">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem("fb-t")||"light"}catch(e){}</script>
+<script>try{if(localStorage.getItem("dys")=="1")document.documentElement.setAttribute("data-dys","")}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;800&family=Zen+Dots&family=Zen+Kaku+Gothic+New:wght@500;700&family=Zen+Antique&family=Hina+Mincho&family=Reggae+One&family=Dela+Gothic+One&family=Potta+One&family=Yusei+Magic&family=Kaisei+Tokumin&family=Kiwi+Maru&display=swap" rel="stylesheet">
@@ -24,6 +25,11 @@
 [data-theme="koi"]{--bg:#0c2127;--ink:#f7f3ea;--accent:#f26a1d;--edge:#f7f3ea;--btn:#12333b;--wave:#4aa3ad;--waveo:0.14;--pat:url(#rp);--disp:"Yusei Magic",sans-serif;--sky:#0e2b33;--mtn:#1b4650;--sun:#f26a1d;--pipe:#3a9aa4;--pipe2:#1f6068;--face:#f7f3ea;--ground:#08171b;--gl:0}
 [data-theme="imperial"]{--bg:#1a0f2e;--ink:#f5ecd2;--accent:#8e47c8;--edge:#d6ad34;--btn:#271645;--wave:#d6ad34;--waveo:0.1;--pat:url(#ki);--disp:"Kaisei Tokumin",serif;--sky:#241342;--mtn:#3d2670;--sun:#d6ad34;--pipe:#2f8f78;--pipe2:#1d5f50;--face:#f5ecd2;--ground:#12091f;--gl:0}
 [data-theme="kitsune"]{--bg:#14122a;--ink:#f6efe6;--accent:#e8561a;--edge:#7fe3ff;--btn:#201c3d;--wave:#7fe3ff;--waveo:0.1;--pat:url(#sg);--disp:"Kiwi Maru",serif;--sky:#1a1736;--mtn:#2a2557;--sun:#f6efe6;--pipe:#d8421a;--pipe2:#8f2a12;--face:#f6efe6;--ground:#0c0b1c;--gl:7}
+@font-face{font-family:"OpenDyslexic";font-style:normal;font-weight:400;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-400-normal.woff2) format("woff2"),url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-400-normal.woff) format("woff")}
+@font-face{font-family:"OpenDyslexic";font-style:normal;font-weight:700;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-700-normal.woff2) format("woff2"),url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-700-normal.woff) format("woff")}
+:root[data-dys][data-theme]{--ui:"OpenDyslexic","Zen Kaku Gothic New",sans-serif;--disp:"OpenDyslexic","Zen Kaku Gothic New",sans-serif;--num:"OpenDyslexic","Zen Kaku Gothic New",sans-serif}
+.dysbtn{flex:none;width:34px;height:34px;border:2px solid var(--ink);border-radius:50%;background:transparent;color:var(--ink);font:800 13px var(--ui);padding:0}
+.dysbtn.on{background:var(--ink);color:var(--bg)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
 body{display:grid;place-items:center;background:var(--bg);color:var(--ink);font-family:var(--ui);overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
@@ -50,7 +56,7 @@ button:active{transform:scale(.97)}
 const $=s=>document.querySelector(s),W=360,H=600,GH=70,GY=H-GH,cv=$('#cv'),g=cv.getContext('2d');cv.width=W;cv.height=H;
 const DIF=[['Easy 易',178,135],['Normal 中',150,150],['Hard 難',126,170]];
 const TH=[['light','Woodblock 浮世絵','#e6e0cf'],['dark','Neon ネオン','#0b0820'],['samurai','Samurai 侍','#100d0b'],['ninja','Ninja 忍','#0a0c0f'],['geisha','Geisha 芸者','#efd5d6'],['kabuki','Kabuki 歌舞伎','#f3ece0'],['dragon','Dragon 龍','#06121d'],['koi','Koi 鯉','#0c2127'],['imperial','Imperial 皇室','#1a0f2e'],['kitsune','Kitsune 狐','#14122a']];
-let st='menu',prev='ready',d=1,sc=0,best=[0,0,0],bird,pipes=[],off=0,t=0,last=0,lock=0,flash=0,shake=0,pal={},isNew=false;
+let UIF='"Zen Kaku Gothic New",sans-serif',st='menu',prev='ready',d=1,sc=0,best=[0,0,0],bird,pipes=[],off=0,t=0,last=0,lock=0,flash=0,shake=0,pal={},isNew=false;
 const get=k=>{try{return localStorage.getItem(k)}catch(e){return null}},put=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
 d=get('fb-d')===null?1:+get('fb-d');best=[0,1,2].map(i=>+get('fb-b'+i)||0);
 const GAP=()=>DIF[d][1],SP=()=>DIF[d][2]+Math.min(50,sc*1.2);
@@ -134,7 +140,7 @@ function draw(){
   crane();
   g.textAlign='center';g.lineJoin='round';
   if(st!='menu'){g.font='800 54px '+pal.disp;g.lineWidth=7;g.strokeStyle=pal.ink;g.strokeText(sc,W/2,100);g.fillStyle=pal.face;g.fillText(sc,W/2,100)}
-  if(st=='ready'){g.font='700 15px "Zen Kaku Gothic New",sans-serif';g.lineWidth=4;g.strokeStyle=pal.ink;g.strokeText('Tap · Click · Space to flap',W/2,H/2+70);g.fillStyle=pal.face;g.fillText('Tap · Click · Space to flap',W/2,H/2+70)}
+  if(st=='ready'){g.font='700 15px '+UIF;g.lineWidth=4;g.strokeStyle=pal.ink;g.strokeText('Tap · Click · Space to flap',W/2,H/2+70);g.fillStyle=pal.face;g.fillText('Tap · Click · Space to flap',W/2,H/2+70)}
   if(flash>0){g.globalAlpha=flash*.55;g.fillStyle='#fff';g.fillRect(0,0,W,H);g.globalAlpha=1}
   g.restore();
 }
@@ -148,24 +154,31 @@ function ui(h){const o=$('#ov');o.innerHTML=h;o.classList.add('show');$('#pb').s
 function hide(){$('#ov').classList.remove('show');$('#pb').style.display='block'}
 function menu(){
   st='menu';reset();st='menu';
-  ui(`<h1>羽ばたき</h1><p>Habataki · Flappy Crane</p><button class="btn go" data-a="play">Play</button>
+  ui(`<h1>羽ばたき</h1><p>Habataki · Flappy Crane</p><button class="btn go" data-a="play">Play</button><button class="btn" data-a="dys">${dysLabel()}</button>
   <div class="seg">${DIF.map((x,i)=>`<button data-d="${i}" class="${i==d?'on':''}">${x[0]}</button>`).join('')}</div>
   <select id="th" aria-label="Style">${TH.map(x=>`<option value="${x[0]}"${document.documentElement.dataset.theme==x[0]?' selected':''}>${x[1]}</option>`).join('')}</select>
   <p>Best <b>${best[d]}</b> · 銅 10 · 銀 25 · 金 40</p><p>Weave between the bamboo.<br>Tap, click or press Space to flap.</p>`);
 }
 function play(){reset();hide()}
 function pause(){if(st!='play'&&st!='ready')return;prev=st;st='pause';ui('<h1>休</h1><p>Paused</p><button class="btn go" data-a="resume">Resume</button><button class="btn" data-a="menu">Quit to menu</button>')}
+function toggleDys(){
+  const on=!document.documentElement.hasAttribute('data-dys');
+  document.documentElement.toggleAttribute('data-dys',on);
+  try{localStorage.setItem('dys',on?'1':'0')}catch(e){}
+  (document.fonts&&document.fonts.load('16px OpenDyslexic')||Promise.resolve()).catch(()=>{}).then(()=>setTheme(document.documentElement.dataset.theme));
+}
+const dysLabel=()=>'Dyslexia font: '+(document.documentElement.hasAttribute('data-dys')?'On':'Off');
 function setTheme(x){
   document.documentElement.dataset.theme=x;put('fb-t',x);
   document.querySelector('meta[name=theme-color]').content=(TH.find(v=>v[0]==x)||TH[0])[2];
   const c=getComputedStyle(document.documentElement),v=n=>c.getPropertyValue(n).trim();
-  pal={sky:v('--sky'),mtn:v('--mtn'),sun:v('--sun'),pipe:v('--pipe'),pipe2:v('--pipe2'),face:v('--face'),ground:v('--ground'),wave:v('--wave'),ink:v('--ink'),accent:v('--accent'),gl:+v('--gl')||0,disp:v('--disp')};
+  pal={sky:v('--sky'),mtn:v('--mtn'),sun:v('--sun'),pipe:v('--pipe'),pipe2:v('--pipe2'),face:v('--face'),ground:v('--ground'),wave:v('--wave'),ink:v('--ink'),accent:v('--accent'),gl:+v('--gl')||0,disp:v('--disp')};UIF=v('--ui')||UIF;
 }
 $('#ov').onclick=e=>{
   const b=e.target.closest('button');if(!b)return;
   if(b.dataset.d!==undefined){d=+b.dataset.d;put('fb-d',d);menu();return}
   const a=b.dataset.a;
-  if(a=='play'||a=='retry')play();else if(a=='menu')menu();else if(a=='resume'){st=prev;hide();last=0}
+  if(a=='play'||a=='retry')play();else if(a=='menu')menu();else if(a=='resume'){st=prev;hide();last=0}else if(a=='dys'){toggleDys();menu()}
 };
 $('#ov').onchange=e=>{if(e.target.id=='th')setTheme(e.target.value)};
 $('#pb').onclick=e=>{e.stopPropagation();pause()};
