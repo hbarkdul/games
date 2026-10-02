@@ -119,6 +119,9 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .c.he{box-shadow:inset 0 0 0 3px var(--err)}
 .c.ht{outline:3px dashed var(--accent);outline-offset:-3px;animation:hpl .7s infinite alternate}
 @keyframes hpl{to{filter:brightness(1.3)}}
+body.tut .tools,body.tut #pad{display:none}
+#tlv button{justify-content:flex-start;text-align:left}
+#tlv small{font:500 11px var(--ui);opacity:.75;margin-left:auto}
 </style>
 </head>
 <body>
@@ -167,9 +170,13 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
     <button class="btn" data-d="1">Medium <b>中級</b></button>
     <button class="btn" data-d="2">Hard <b>上級</b></button>
     <button class="btn" data-d="3">Expert <b>達人</b></button>
+    <button class="btn" data-d="4">Master <b>名人</b></button>
+    <button class="btn alt" id="tut">Tutorial <b>学</b></button>
     <button class="btn alt" id="cont" hidden>Continue current game</button>
   </div>
 </div></div>
+
+<div class="ov" id="tl"><div class="card"><h2>学 Tutorial</h2><p style="font-size:13px">Six worked examples, from intermediate to advanced. Each one is a real puzzle partway through; step through to see how the technique works.</p><div class="lv" id="tlv"></div><button class="btn alt" id="tlb" style="justify-content:center">Back</button></div></div>
 
 <div class="ov" id="win"><div class="card">
   <div class="big">完</div><h2>Solved!</h2><p id="wt"></p>
@@ -178,10 +185,11 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
 <script>
 const $=s=>document.querySelector(s);
-const LV=[["Easy",42],["Medium",34],["Hard",30],["Expert",25]];
+const LV=[["Easy",42],["Medium",34],["Hard",30],["Expert",25],["Master",0]];
 const POP=Array.from({length:1024},(_,i)=>i.toString(2).replace(/0/g,'').length);
 const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 const bx=i=>(i/27|0)*3+((i%9)/3|0);
+const rnd=n=>Math.random()*n|0;
 
 function solve(g,limit,rand,out){
   const R=Array(9).fill(0),C=Array(9).fill(0),X=Array(9).fill(0);
@@ -206,6 +214,7 @@ function solve(g,limit,rand,out){
   return n;
 }
 function generate(d){
+  if(d==4)return genMaster();
   const sol=Array(81).fill(0);solve(Array(81).fill(0),1,true,sol);
   const g=sol.slice();let clues=81;
   for(const i of shuf([...Array(81).keys()])){
@@ -217,8 +226,8 @@ function generate(d){
   return{given:g.map(v=>v>0),v:g.slice(),sol,d};
 }
 
-let S=null,timer=null;
-const save=()=>{try{localStorage.setItem('sdk1',JSON.stringify(S))}catch(e){}};
+let S=null,timer=null,TUT=null;
+const save=()=>{if(TUT)return;try{localStorage.setItem('sdk1',JSON.stringify(S))}catch(e){}};
 function newGame(d){
   const p=generate(d);
   S={...p,notes:Array(81).fill(0),elim:Array(81).fill(0),sel:-1,nm:false,mist:0,t:0,hist:[],done:false};
@@ -241,7 +250,7 @@ function render(){
     if(S.given[i])k+=' g';else if(S.v[i])k+=S.v[i]!==S.sol[i]?' err':' u';
     if(HN){if(HN.unit.includes(i))k+=' hu';if(HN.lvl){if(HN.cells.includes(i))k+=' hc';if(i===HN.target)k+=' ht';if(HN.elims&&HN.elims.some(e=>e[0]===i))k+=' he'}}
     let inner=S.v[i]||'';
-    if(!S.v[i]&&S.notes[i]){inner='<div class="n">';for(let n=1;n<10;n++)inner+='<i'+(S.notes[i]>>n&1&&n===sv?' class="hl"':'')+'>'+(S.notes[i]>>n&1?n:'')+'</i>';inner+='</div>'}
+    if(!S.v[i]&&S.notes[i]){inner='<div class="n">';for(let n=1;n<10;n++)inner+='<i'+(S.notes[i]>>n&1&&(n===sv||(HN&&HN.hd&&HN.hd.includes(n)))?' class="hl"':'')+'>'+(S.notes[i]>>n&1?n:'')+'</i>';inner+='</div>'}
     h+=`<div class="${k}" data-i="${i}" role="gridcell">${inner}</div>`;
   }
   $('#board').innerHTML=h;
@@ -261,6 +270,76 @@ const UNAME=u=>u<9?'row '+(u+1):u<18?'column '+(u-8):'box '+(u-17);
 const rc=i=>`R${(i/9|0)+1}C${i%9+1}`,dg=m=>R9.map(x=>x+1).filter(d=>m>>d&1);
 const lst=el=>el.map(([i,m])=>`${rc(i)} (${dg(m).join(',')})`).join(', ');
 function cands(){const el=S.elim||(S.elim=Array(81).fill(0));return S.v.map((v,i)=>{if(v)return 0;let m=0x3FE;for(const j of PE[i])if(S.v[j])m&=~(1<<S.v[j]);return m&~el[i]})}
+const see=(a,b)=>a!=b&&((a/9|0)==(b/9|0)||a%9==b%9||bx(a)==bx(b));
+const comb=(a,k,st=0,cur=[],out=[])=>{if(cur.length==k){out.push(cur.slice());return out}for(let i=st;i<a.length;i++){cur.push(a[i]);comb(a,k,i+1,cur,out);cur.pop()}return out};
+function hpair(C){
+  for(let u=0;u<27;u++)for(let a=1;a<10;a++)for(let b=a+1;b<10;b++){
+    const pa=UN[u].filter(i=>C[i]>>a&1),pb=UN[u].filter(i=>C[i]>>b&1);
+    if(pa.length!=2||pb.length!=2||pa[0]!=pb[0]||pa[1]!=pb[1])continue;
+    const m=(1<<a)|(1<<b),el=pa.map(i=>[i,C[i]&~m]).filter(x=>x[1]);
+    if(el.length)return{unit:u,cells:pa,digits:[a,b],elims:el};
+  }
+  return null;
+}
+function ntrip(C){
+  for(let u=0;u<27;u++){
+    const em=UN[u].filter(c=>!S.v[c]&&POP[C[c]]>=2&&POP[C[c]]<=3);
+    for(const[a,b,c]of comb(em,3)){
+      const m=C[a]|C[b]|C[c];if(POP[m]!=3)continue;
+      const el=UN[u].filter(x=>!S.v[x]&&x!=a&&x!=b&&x!=c&&(C[x]&m)).map(x=>[x,C[x]&m]);
+      if(el.length)return{unit:u,cells:[a,b,c],digits:dg(m),elims:el};
+    }
+  }
+  return null;
+}
+function fish(C,n){
+  for(let d=1;d<10;d++)for(const byRow of[1,0]){
+    const ln=i=>byRow?UN[i]:UN[9+i],pos=[];
+    for(let i=0;i<9;i++)pos.push(ln(i).filter(c=>!S.v[c]&&(C[c]>>d&1)).map(c=>byRow?c%9:c/9|0));
+    const cand=R9.filter(i=>pos[i].length>=2&&pos[i].length<=n);
+    for(const g of comb(cand,n)){
+      const cov=[...new Set(g.flatMap(i=>pos[i]))].sort((a,b)=>a-b);if(cov.length!=n)continue;
+      const el=[];for(const x of cov)for(let i=0;i<9;i++){if(g.includes(i))continue;const c=byRow?i*9+x:x*9+i;if(!S.v[c]&&(C[c]>>d&1))el.push([c,1<<d])}
+      if(el.length)return{t:n==2?'X-Wing':'Swordfish',d,byRow,base:g,cover:cov,cells:g.flatMap(i=>pos[i].map(x=>byRow?i*9+x:x*9+i)),elims:el};
+    }
+  }
+  return null;
+}
+function sky(C){
+  for(let d=1;d<10;d++)for(const byRow of[1,0]){
+    const ln=i=>byRow?UN[i]:UN[9+i],pos=[];
+    for(let i=0;i<9;i++)pos.push(ln(i).filter(c=>!S.v[c]&&(C[c]>>d&1)).map(c=>byRow?c%9:c/9|0));
+    for(let a=0;a<9;a++)for(let b=a+1;b<9;b++){
+      if(pos[a].length!=2||pos[b].length!=2)continue;
+      const sh=pos[a].filter(x=>pos[b].includes(x));if(sh.length!=1)continue;
+      const ea=pos[a].find(x=>x!=sh[0]),eb=pos[b].find(x=>x!=sh[0]);
+      const ca=byRow?a*9+ea:ea*9+a,cb=byRow?b*9+eb:eb*9+b,el=[];
+      for(let c=0;c<81;c++)if(c!=ca&&c!=cb&&!S.v[c]&&(C[c]>>d&1)&&see(c,ca)&&see(c,cb))el.push([c,1<<d]);
+      if(el.length){const bc=byRow?[a*9+sh[0],b*9+sh[0]]:[sh[0]*9+a,sh[0]*9+b];return{d,byRow,lines:[a,b],shared:sh[0],cells:[...bc,ca,cb],base:bc,roof:[ca,cb],elims:el}}
+    }
+  }
+  return null;
+}
+function xyw(C){
+  for(let p=0;p<81;p++){
+    if(S.v[p]||POP[C[p]]!=2)continue;const[x,y]=dg(C[p]),pe=PE[p].filter(c=>!S.v[c]&&POP[C[c]]==2);
+    for(const a of pe){
+      if(!(C[a]>>x&1)||(C[a]>>y&1))continue;const z=dg(C[a]&~(1<<x))[0];
+      for(const b of pe){
+        if(b==a||!(C[b]>>y&1)||(C[b]>>x&1)||!(C[b]>>z&1))continue;
+        const el=[];for(let c=0;c<81;c++)if(c!=a&&c!=b&&c!=p&&!S.v[c]&&(C[c]>>z&1)&&see(c,a)&&see(c,b))el.push([c,1<<z]);
+        if(el.length)return{pivot:p,pa:a,pb:b,x,y,z,cells:[p,a,b],elims:el};
+      }
+    }
+  }
+  return null;
+}
+function fishHint(o){
+  const lw=o.byRow?'row':'column',cw=o.byRow?'column':'row',n=o.base.length,bases=o.base.map(i=>i+1).join(', '),covers=o.cover.map(i=>i+1).join(', ');
+  return{t:o.t,g:`Look at the ${o.d}: ${n} ${lw}s allow it in only ${n==2?'two':'a few'} places each, all lined up in the same ${n} ${cw}s (${n==2?'an X-Wing':'a swordfish'}).`,
+    f:`In ${lw}s ${bases}, the ${o.d} can only go in ${cw}s ${covers}. Those ${n} ${lw}s will use up the ${o.d} in ${cw}s ${covers}, so no other cell in those ${cw}s can be ${o.d}. Remove: ${lst(o.elims)}.`,
+    unit:[],cells:o.cells,target:null,elims:o.elims,hd:[o.d]};
+}
 function findHint(){
   const bad=[...Array(81).keys()].filter(i=>!S.given[i]&&S.v[i]&&S.v[i]!==S.sol[i]);
   if(bad.length){const i=bad[0];return{t:'Mistake',g:'A number on the board is wrong (it is shown in red). Logic hints need a correct board.',f:`${rc(i)} holds a ${S.v[i]} that cannot be right. Clear it and try again.`,unit:[],cells:[],target:i,erase:i}}
@@ -302,8 +381,14 @@ function findHint(){
     const pa=UN[u].filter(i=>C[i]>>a&1),pb=UN[u].filter(i=>C[i]>>b&1);
     if(pa.length!=2||pb.length!=2||pa[0]!=pb[0]||pa[1]!=pb[1])continue;
     const m=(1<<a)|(1<<b),el=pa.map(i=>[i,C[i]&~m]).filter(x=>x[1]);
-    if(el.length)return{t:'Hidden pair',g:`Look at ${UNAME(u)}: two digits only fit in the same two cells (a hidden pair).`,f:`In ${UNAME(u)}, ${a} and ${b} can only go in ${rc(pa[0])} and ${rc(pa[1])}, so those two cells can't hold anything else. Remove: ${lst(el)}.`,unit:UN[u],cells:pa,target:null,elims:el};
+    if(el.length)return{t:'Hidden pair',g:`Look at ${UNAME(u)}: two digits only fit in the same two cells (a hidden pair).`,f:`In ${UNAME(u)}, ${a} and ${b} can only go in ${rc(pa[0])} and ${rc(pa[1])}, so those two cells can't hold anything else. Remove: ${lst(el)}.`,unit:UN[u],hd:[a,b],cells:pa,target:null,elims:el};
   }
+  let o;
+  if(o=ntrip(C))return{t:'Naked triple',g:`Look at ${UNAME(o.unit)}: three cells share just three candidates between them (a naked triple).`,f:`${o.cells.map(rc).join(', ')} can only hold ${o.digits.join(', ')} between them, so no other cell in ${UNAME(o.unit)} can be ${o.digits.join(', ')}. Remove: ${lst(o.elims)}.`,unit:UN[o.unit],cells:o.cells,target:null,elims:o.elims,hd:o.digits};
+  if(o=fish(C,2))return fishHint(o);
+  if(o=sky(C)){const lw=o.byRow?'row':'column',cw=o.byRow?'column':'row';return{t:'Skyscraper',g:`Look at the ${o.d} in ${lw}s ${o.lines[0]+1} and ${o.lines[1]+1}: each has just two places for it, and they share one ${cw} (a skyscraper).`,f:`One of the roof cells ${rc(o.roof[0])} and ${rc(o.roof[1])} must be ${o.d}: if ${rc(o.roof[0])} is not, the base cell in its ${lw} is, which rules out the base in the other ${lw}, so ${rc(o.roof[1])} is. Any cell that sees both roof cells can't be ${o.d}. Remove: ${lst(o.elims)}.`,unit:[],cells:o.cells,target:null,elims:o.elims,hd:[o.d]}}
+  if(o=xyw(C))return{t:'XY-Wing',g:`Look at ${rc(o.pivot)}: it has just two candidates, and two cells it sees each share one of them plus a third digit (an XY-wing).`,f:`${rc(o.pivot)} is ${o.x} or ${o.y}. If it is ${o.x}, ${rc(o.pa)} must be ${o.z}; if it is ${o.y}, ${rc(o.pb)} must be ${o.z}. Either way one of them is ${o.z}, so any cell that sees both can't be ${o.z}. Remove: ${lst(o.elims)}.`,unit:[],cells:o.cells,target:null,elims:o.elims,hd:[o.z]};
+  if(o=fish(C,3))return fishHint(o);
   let best=-1;for(let i=0;i<81;i++)if(!S.v[i]&&(best<0||POP[C[i]]<POP[C[best]]))best=i;
   if(best<0)return null;
   return{t:'Next step',g:'No simple pattern (singles, pairs, pointing pairs) is available here. This one needs a deeper technique.',f:`${rc(best)} is ${S.sol[best]}. Try to work out why: look at what its row, column and box rule out.`,unit:[],cells:[],target:best,digit:S.sol[best]};
@@ -319,13 +404,74 @@ function applyHint(){
 function drawHint(){
   const b=$('#hintbar');
   if(!HN){b.hidden=true;return}
+  if(TUT)return drawTut(b);
   b.hidden=false;
   const act=HN.erase!==undefined?'Clear it':HN.digit?'Place it':'Apply';
   b.innerHTML=`<b>${HN.t}</b><span>${HN.lvl?HN.f:HN.g}</span><div class="hb">${HN.lvl?`<button class="go" data-h="apply">${act}</button>`:'<button data-h="more">Explain</button>'}<button data-h="x">✕ Close</button></div>`;
 }
+/* ---------- Master puzzles (pre-graded: each needs an advanced technique) ---------- */
+const MB=["003060200002008060000000401790012000600703002000680049104000000020800300006020100", "300040000208001000190003400000400600681000254004005000009500087000700309000080006", "609120800080000600030050020098400500200090008006005910060010080001000090003068107", "040507010070000054100000000023400000500903002000005970000000008450000090060801040", "390700800040020007000000050000302070002050400060908000070000000400080060005007028", "700050000000108500905370006500000702070000060103000005200013809006407000000020003", "400020000060010540080006100803090000004000600000080403009800050012060070000040001", "000000050720900010063010200200300900000528000005006007002030690050009081090000000", "005030627300007050200600001600043500000090000009270006900004003040300005783060400", "503010000040000090807006500010028000230000084000150020001900708080000010000070209", "500000029020070360010900000905002007000060000200400103000006080092010030680000002", "009030020700000004245009000300400260500090007078006009000800456800000002020050800", "010000090700030400002400006098010004000823000100070630500002900007090002030000060", "010070050079005200005600000080000020003548700050000060000009800007100630020050040", "700900000005104700460000090607005000503000207000700601070000045006508900000001002", "008030900000400020070608000090100008057090410100004090000907050020001000003050700", "080030001009005003002060070000001096800000004610500000020010300900700600700020080", "000030040200060009087002001043000008026000490900000630300800510100070004090050000", "000005300040630001300009520000004100080060070004300000036700002900083040005400000", "000600300060703050007008016800200030079030280020004001730400100010802090006007000", "000010000290007810001000203070500000010306070000004050904000600035900081000080000", "001200000047090020030050900500800600300060001004002003005010090010020730000005100", "020009800000200150081000079007406008000000000400701300190000420078005000005100080", "200006305073280100800030002007000000020050060000000900600020007002013640104700008", "640000300000400106000076000230000680000503000084000037000210000705008000009000014", "713000000006010470050600000040085200000109000001720080000002060068030900000000148", "000000201000280005070000390006900172090000050152004600041000020700046000509000000", "000000900010300400000970850140590020000000000070024065064012000007003080001000000", "600050704070002063000600500000940000090060020000015000007001000940800030208030007", "490500008007020000002403000003001060500608009020900700000302800000040900200005041", "072800000040070900910006080000240030000358000080067000090700012005080070000002840", "400100000007009301500307004000013800030000010004670000300704008702900500000001009", "020000009000009251000001860209070000080050090000090504075900000193200000600000070", "003072000070500100500030820000800060300050001040007000061040008008005090000280600", "600900720000026010020000030005208400070050060003609100050000070010790000046002009", "019000305000900006000004007002005004070080050400700900600500000700006000308000610", "900071080004600007060005000000130800070000020003098000000200040700006900050310002", "000508000000001700010060052050040093003000100490030020240050010008600000000702000", "080000000200000093030701580040060007300204006600050030013908070820000009000000040", "957000030840000000002750004000084200400107003003560000500038100000000025070000389", "005000800000700940080061007000800470010000090067002000100470030059006000006000100", "900600000100002060006004917685003000000070000000100584578400100090700006000001008", "900500008080074100000600020601000400050000060009000701090002000008740050300006009", "100900000038070000000085009000000520702403908091000000200630000000010450000008003", "050000000001590040400810000830070009600302008200040061000085003080036500000000080", "010000900000060001200009030080500090904010605060004080020700003600040000007000050", "150020090800003000074800000000600040605040701040009000000006810000300007010080069", "004701600700802040506400000950000260000000000068000034000006803030508001002903400", "100007800040005309020060007000002040010000090030900000500020080401500030009800005", "107040000003009005090370000000900360500030002086004000000061080700400500000050104", "090800030004060000758004000000086009800000007600950000000300872000090600080001090", "000510000705008001000270900900003780200090003031800006007035000600700509000041000", "090050000008020010160400030007080002900705008300040700030007064070030800000060070", "054800070007000960200000000000602030030010080010503000000000002026000400070008610", "000210006007000500620035047370000000080020070000000058710460085006000300900051000", "340000020000400160000003007002097304005060900409280600200100000064002000010000038", "056000070080060003700810000090076002040000090500940010000051007800020060030000250", "500040809000002000029050600001700000706080401000006700008020960000400000402090008", "800100000050020003104500720002040005400769008300050400043007102500010040000005007", "706000280010802004200000506009106300000080000003407600607000005900705060052000107", "200900030006003908040000600900000800800439005001000006005000070103200500080005009", "096000005000009020000130900030002008005403700900800030002014000080200000500000640", "004090003200008000070102080030000009706803102800000060020609030000400006600010400", "280430007000002050006107900020001000001000200000600070002903400040200000300046021"];
+function genMaster(){
+  const g=[...MB[rnd(MB.length)]].map(Number),dp=shuf([1,2,3,4,5,6,7,8,9]),P=()=>shuf([0,1,2]).flatMap(b=>shuf([0,1,2]).map(k=>b*3+k)),R=P(),C=P();
+  let h=Array.from({length:81},(_,i)=>{const v=g[R[i/9|0]*9+C[i%9]];return v?dp[v-1]:0});
+  if(rnd(2)){const t=h.slice();h=Array.from({length:81},(_,i)=>t[(i%9)*9+(i/9|0)])}
+  const sol=Array(81).fill(0);solve(h.slice(),1,false,sol);
+  return{given:h.map(v=>v>0),v:h.slice(),sol,d:4};
+}
+/* ---------- Tutorial: worked examples ---------- */
+const TECH_EX=[{"t":"Hidden pair","b":"713625984485937261600148537834276159571493628200581743908002006000809002000004895","e":[]},{"t":"Naked triple","b":"040307185013200796007010324605103470071000530039005261700481953158932647394006812","e":[]},{"t":"X-Wing","b":"735289614020760359960305782012506897657892143090170526046908275270450968589627431","e":[]},{"t":"Skyscraper","b":"508301794079045183413978256345800901087194305901053408832010549194582637756439812","e":[]},{"t":"XY-Wing","b":"697543281253861974814279563401652090029184050568397142146928735005716420002435010","e":[]},{"t":"Swordfish","b":"080571300004806175715304086167948523500712008008653017890465730450237800070189050","e":[]}];
+const techObj=(n,C)=>n=='Hidden pair'?hpair(C):n=='Naked triple'?ntrip(C):n=='X-Wing'?fish(C,2):n=='Swordfish'?fish(C,3):n=='Skyscraper'?sky(C):n=='XY-Wing'?xyw(C):null;
+function narrate(n,o,C){
+  const lw=o.byRow?'row':'column',cw=o.byRow?'column':'row',dl=o.digits?o.digits.join(' and '):'',cn=o.cells.map(rc).join(', ');
+  const rm=(ds)=>`Cells that can't hold ${ds} any more: ${lst(o.elims)}. They are marked in red.`;
+  const S0={text:`A real puzzle, part way through. The small numbers (pencil marks) show every digit each empty cell could still be. All the simple moves (naked and hidden singles) are used up, so this is where a ${n} helps.`};
+  const E=(ds)=>[{text:rm(ds),cells:o.cells,elims:1,hd:o.hd||[]},{text:`Remove those pencil marks. The grid is simpler now, and this often unlocks a new single. Use Hint in a real game to find the next step.`,cells:o.cells,apply:1,hd:o.hd||[]}];
+  if(n=='Hidden pair')return[S0,{text:`Look at ${UNAME(o.unit)}. The digits ${dl} each have only two possible cells in it: ${cn}.`,unit:UN[o.unit],cells:o.cells,hd:o.digits},{text:`${dl} must go in those two cells, one each, so these cells can't hold anything else.`,unit:UN[o.unit],cells:o.cells,hd:o.digits},...E('any other digit')];
+  if(n=='Naked triple')return[S0,{text:`Look at ${UNAME(o.unit)}. The three cells ${cn} only have candidates from ${o.digits.join(', ')}.`,unit:UN[o.unit],cells:o.cells,hd:o.digits},{text:`Three cells and only three digits between them: ${o.digits.join(', ')} must fill exactly these cells. So no other cell in ${UNAME(o.unit)} can be ${o.digits.join(', ')}.`,unit:UN[o.unit],cells:o.cells,hd:o.digits},...E(o.digits.join(', '))];
+  if(n=='X-Wing')return[S0,{text:`Follow the digit ${o.d}. In ${lw}s ${o.base.map(i=>i+1).join(' and ')}, it has just two possible cells each.`,cells:o.cells,hd:[o.d]},{text:`Both ${lw}s use the same two ${cw}s (${o.cover.map(i=>i+1).join(' and ')}), so the four cells form a rectangle: an X-Wing.`,cells:o.cells,hd:[o.d]},{text:`Each ${lw} needs one ${o.d}. If one takes its ${cw} ${o.cover[0]+1} spot, the other must take ${cw} ${o.cover[1]+1}, and the other way round. Either way, ${cw}s ${o.cover[0]+1} and ${o.cover[1]+1} get their ${o.d} from this rectangle.`,cells:o.cells,hd:[o.d]},...E(String(o.d))];
+  if(n=='Skyscraper')return[S0,{text:`Follow the digit ${o.d}. In ${lw}s ${o.lines[0]+1} and ${o.lines[1]+1} it has just two possible cells each.`,cells:[...o.base,...o.roof],hd:[o.d]},{text:`The two ${lw}s share one ${cw} (the base cells ${o.base.map(rc).join(' and ')}). The other two cells, ${o.roof.map(rc).join(' and ')}, are the roof tops, in different ${cw}s: a skyscraper.`,cells:[...o.base,...o.roof],hd:[o.d]},{text:`One roof top is always ${o.d}. If ${rc(o.roof[0])} is not, the base cell in its ${lw} is, which rules out the base in the other ${lw}, so ${rc(o.roof[1])} is. Any cell that sees both roof tops can't be ${o.d}.`,cells:o.roof,hd:[o.d]},...E(String(o.d))];
+  if(n=='XY-Wing')return[S0,{text:`Look at ${rc(o.pivot)}, the pivot. It can only be ${o.x} or ${o.y}.`,cells:[o.pivot],hd:[o.x,o.y]},{text:`${rc(o.pa)} can only be ${o.x} or ${o.z}, and ${rc(o.pb)} can only be ${o.y} or ${o.z}. Both of them see the pivot: an XY-Wing.`,cells:o.cells,hd:[o.x,o.y,o.z]},{text:`If the pivot is ${o.x}, then ${rc(o.pa)} must be ${o.z}. If the pivot is ${o.y}, then ${rc(o.pb)} must be ${o.z}. Either way one of the two wings is ${o.z}, so any cell that sees both wings can't be ${o.z}.`,cells:o.cells,hd:[o.z]},...E(String(o.z))];
+  return[S0,{text:`Follow the digit ${o.d}. In ${lw}s ${o.base.map(i=>i+1).join(', ')} every possible cell for it sits in just three ${cw}s: ${o.cover.map(i=>i+1).join(', ')}.`,cells:o.cells,hd:[o.d]},{text:`Three ${lw}s, each needing one ${o.d}, with only three ${cw}s to put it in: a swordfish. Those three ${cw}s will get their ${o.d} from these ${lw}s, so no other cell in them can be ${o.d}.`,cells:o.cells,hd:[o.d]},...E(String(o.d))];
+}
+function startTut(i){
+  if(!TUT)TUT={saved:S};
+  TUT.i=i;TUT.s=0;const ex=TECH_EX[i],b=[...ex.b].map(Number);
+  S={given:b.map(v=>v>0),v:b,sol:Array(81).fill(0),notes:Array(81).fill(0),elim:Array(81).fill(0),sel:-1,nm:false,mist:0,t:0,hist:[],d:4,done:true};
+  (ex.e||[]).forEach(([c,m])=>{S.elim[c]=m});
+  solve(b.slice(),1,false,S.sol);
+  TUT.C=cands();TUT.o=techObj(ex.t,TUT.C);TUT.steps=narrate(ex.t,TUT.o,TUT.C);
+  document.body.classList.add('tut');$('#tl').classList.remove('show');$('#menu').classList.remove('show');showTut();
+}
+function showTut(){
+  const st=TUT.steps[TUT.s];S.notes=TUT.C.slice();
+  if(st.apply)for(const[i,m]of TUT.o.elims)S.notes[i]&=~m;
+  HN={unit:st.unit||[],cells:st.cells||[],target:null,elims:st.elims?TUT.o.elims:null,lvl:1,hd:st.hd||[],t:'',g:'',f:''};
+  S.sel=-1;render();
+}
+function drawTut(b){
+  const ex=TECH_EX[TUT.i],st=TUT.steps[TUT.s],last=TUT.s==TUT.steps.length-1;
+  b.hidden=false;
+  b.innerHTML=`<b>${ex.t} · example ${TUT.i+1}/${TECH_EX.length} · step ${TUT.s+1}/${TUT.steps.length}</b><span>${st.text}</span><div class="hb"><button data-h="tprev">◀ Back</button><button class="go" data-h="tnext">${last?(TUT.i<TECH_EX.length-1?'Next example ▶':'Finish'):'Next ▶'}</button><button data-h="tx">✕ Exit</button></div>`;
+}
+function tutAct(a){
+  if(a=='tprev'){if(TUT.s>0){TUT.s--;showTut()}else if(TUT.i>0)startTut(TUT.i-1)}
+  else if(a=='tnext'){if(TUT.s<TUT.steps.length-1){TUT.s++;showTut()}else if(TUT.i<TECH_EX.length-1)startTut(TUT.i+1);else exitTut()}
+  else if(a=='tx')exitTut();
+}
+function exitTut(){
+  if(!TUT)return;S=TUT.saved;TUT=null;HN=null;document.body.classList.remove('tut');render();
+  if(!S||S.done)$('#menu').classList.add('show');
+}
+function openTutList(){
+  $('#tlv').innerHTML=TECH_EX.map((e,i)=>`<button class="btn" data-i="${i}">${i+1}. ${e.t}<small>${['Beginner+','Intermediate','Advanced','Advanced','Advanced','Expert'][i]||''}</small></button>`).join('');
+  $('#menu').classList.remove('show');$('#tl').classList.add('show');
+}
+$('#tut').onclick=openTutList;
+$('#tlb').onclick=()=>{$('#tl').classList.remove('show');$('#menu').classList.add('show')};
+$('#tlv').onclick=e=>{const b=e.target.closest('[data-i]');if(b)startTut(+b.dataset.i)};
 function snap(){HN=null;S.hist.push({v:S.v.slice(),notes:S.notes.slice(),mist:S.mist,elim:(S.elim||Array(81).fill(0)).slice()});if(S.hist.length>200)S.hist.shift()}
 function put(n){
-  const i=S.sel;if(i<0||S.given[i]||S.done)return;
+  if(TUT)return;const i=S.sel;if(i<0||S.given[i]||S.done)return;
   if(S.nm){if(S.v[i])return;snap();S.notes[i]^=1<<n}
   else{
     if(S.v[i]===n)return;snap();
@@ -355,6 +501,7 @@ $('#hint').onclick=()=>{
 };
 $('#hintbar').onclick=e=>{
   const b=e.target.closest('button');if(!b||!HN)return;const a=b.dataset.h;
+  if(TUT)return tutAct(a);
   if(a=='x'){HN=null;render()}else if(a=='more'){HN.lvl=1;render()}else if(a=='apply')applyHint();
 };
 $('#new').onclick=()=>{$('#cont').hidden=!S||S.done;$('#menu').classList.add('show')};
