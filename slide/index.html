@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="脱出">
 <meta name="theme-color" content="#e6e0cf">
+<link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem("sd-t")||"light"}catch(e){}</script>
 <script>try{if(localStorage.getItem("dys")=="1")document.documentElement.setAttribute("data-dys","")}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -202,5 +205,6 @@ addEventListener('resize',()=>VS&&layout());
 setTheme(document.documentElement.dataset.theme||'light');
 load(cur);
 </script>
+<script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))</script>
 </body>
 </html>

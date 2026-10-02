@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="数独">
 <meta name="theme-color" content="#e6e0cf">
+<link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem("sdk-theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}catch(e){}</script>
 <script>try{if(localStorage.getItem("dys")=="1")document.documentElement.setAttribute("data-dys","")}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -105,6 +108,17 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 @media (prefers-reduced-motion:no-preference){.big{animation:st .45s cubic-bezier(.3,1.6,.5,1)}
   @keyframes st{from{transform:scale(2.2) rotate(8deg);opacity:0}}}
 @media (max-height:720px){.app{--bs:min(calc(100vw - 28px),380px)}}
+#hintbar{border:2px solid var(--ring);background:var(--paper);border-radius:10px;padding:9px 11px;display:grid;gap:6px;font:600 13px/1.35 var(--ui)}
+#hintbar[hidden]{display:none}
+#hintbar b{font:800 14px var(--disp);color:var(--accent)}
+#hintbar .hb{display:flex;gap:6px}
+#hintbar button{flex:1;border:2px solid var(--ink);background:var(--btn);color:var(--btnink);border-radius:8px;padding:6px 4px;font:700 12px var(--ui)}
+#hintbar button.go{background:var(--accent);border-color:var(--accent);color:var(--onacc)}
+.c.hu{box-shadow:inset 0 0 0 2px var(--ring)}
+.c.hc{box-shadow:inset 0 0 0 9999px color-mix(in srgb,var(--ring) 26%,transparent)}
+.c.he{box-shadow:inset 0 0 0 3px var(--err)}
+.c.ht{outline:3px dashed var(--accent);outline-offset:-3px;animation:hpl .7s infinite alternate}
+@keyframes hpl{to{filter:brightness(1.3)}}
 </style>
 </head>
 <body>
@@ -135,6 +149,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
   </header>
   <div class="info"><span id="lvl"></span><span id="mist"></span><b id="time">0:00</b></div>
   <div id="board" role="grid" aria-label="Sudoku board"></div>
+  <div id="hintbar" hidden></div>
   <div class="tools">
     <button id="undo"><span>戻</span>Undo</button>
     <button id="erase"><span>消</span>Erase</button>
@@ -206,7 +221,7 @@ let S=null,timer=null;
 const save=()=>{try{localStorage.setItem('sdk1',JSON.stringify(S))}catch(e){}};
 function newGame(d){
   const p=generate(d);
-  S={...p,notes:Array(81).fill(0),sel:-1,nm:false,mist:0,t:0,hist:[],done:false};
+  S={...p,notes:Array(81).fill(0),elim:Array(81).fill(0),sel:-1,nm:false,mist:0,t:0,hist:[],done:false};
   save();render();startTimer();
 }
 function startTimer(){clearInterval(timer);timer=setInterval(()=>{if(S&&!S.done&&!document.hidden){S.t++;tick();if(S.t%5==0)save()}},1000)}
@@ -224,6 +239,7 @@ function render(){
       if(sv&&S.v[i]===sv&&i!==S.sel)k+=' same';
     }
     if(S.given[i])k+=' g';else if(S.v[i])k+=S.v[i]!==S.sol[i]?' err':' u';
+    if(HN){if(HN.unit.includes(i))k+=' hu';if(HN.lvl){if(HN.cells.includes(i))k+=' hc';if(i===HN.target)k+=' ht';if(HN.elims&&HN.elims.some(e=>e[0]===i))k+=' he'}}
     let inner=S.v[i]||'';
     if(!S.v[i]&&S.notes[i]){inner='<div class="n">';for(let n=1;n<10;n++)inner+='<i'+(S.notes[i]>>n&1&&n===sv?' class="hl"':'')+'>'+(S.notes[i]>>n&1?n:'')+'</i>';inner+='</div>'}
     h+=`<div class="${k}" data-i="${i}" role="gridcell">${inner}</div>`;
@@ -231,12 +247,83 @@ function render(){
   $('#board').innerHTML=h;
   $('#lvl').textContent=LV[S.d][0];
   $('#mist').textContent='Mistakes '+S.mist;
-  $('#notes').classList.toggle('on',S.nm);
+  $('#notes').classList.toggle('on',S.nm);drawHint();
   tick();
   const cnt=Array(10).fill(0);S.v.forEach((v,i)=>{if(v&&v===S.sol[i])cnt[v]++});
   document.querySelectorAll('#pad button').forEach(b=>{const n=+b.dataset.n;b.disabled=cnt[n]>=9;b.querySelector('small').textContent=9-cnt[n]});
 }
-function snap(){S.hist.push({v:S.v.slice(),notes:S.notes.slice(),mist:S.mist});if(S.hist.length>200)S.hist.shift()}
+/* ---------- explained hints ---------- */
+let HN=null;
+const R9=[0,1,2,3,4,5,6,7,8];
+const PE=[...Array(81).keys()].map(i=>[...Array(81).keys()].filter(j=>j!=i&&((j/9|0)==(i/9|0)||j%9==i%9||bx(j)==bx(i))));
+const UN=R9.map(r=>R9.map(c=>r*9+c)).concat(R9.map(c=>R9.map(r=>r*9+c)),R9.map(b=>R9.map(k=>((b/3|0)*3+(k/3|0))*9+(b%3)*3+k%3)));
+const UNAME=u=>u<9?'row '+(u+1):u<18?'column '+(u-8):'box '+(u-17);
+const rc=i=>`R${(i/9|0)+1}C${i%9+1}`,dg=m=>R9.map(x=>x+1).filter(d=>m>>d&1);
+const lst=el=>el.map(([i,m])=>`${rc(i)} (${dg(m).join(',')})`).join(', ');
+function cands(){const el=S.elim||(S.elim=Array(81).fill(0));return S.v.map((v,i)=>{if(v)return 0;let m=0x3FE;for(const j of PE[i])if(S.v[j])m&=~(1<<S.v[j]);return m&~el[i]})}
+function findHint(){
+  const bad=[...Array(81).keys()].filter(i=>!S.given[i]&&S.v[i]&&S.v[i]!==S.sol[i]);
+  if(bad.length){const i=bad[0];return{t:'Mistake',g:'A number on the board is wrong (it is shown in red). Logic hints need a correct board.',f:`${rc(i)} holds a ${S.v[i]} that cannot be right. Clear it and try again.`,unit:[],cells:[],target:i,erase:i}}
+  const C=cands();
+  for(let i=0;i<81;i++)if(!S.v[i]&&POP[C[i]]==1){
+    const d=dg(C[i])[0],seen=[];
+    for(let k=1;k<10;k++)if(k!=d){const j=PE[i].find(x=>S.v[x]==k);if(j!==undefined)seen.push(j)}
+    return{t:'Naked single',g:`Look at ${UNAME(18+bx(i))}: one of its cells has only one digit left that fits (a naked single).`,f:`${rc(i)} can only be ${d}. Its row, column and box already contain every other digit.`,unit:UN[18+bx(i)],cells:seen,target:i,digit:d};
+  }
+  for(const u of[18,19,20,21,22,23,24,25,26,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17])for(let d=1;d<10;d++){
+    if(UN[u].some(i=>S.v[i]==d))continue;
+    const at=UN[u].filter(i=>C[i]>>d&1);
+    if(at.length==1)return{t:'Hidden single',g:`Look at ${UNAME(u)}: there is a digit with only one place left to go (a hidden single).`,f:`In ${UNAME(u)}, the digit ${d} can only go in ${rc(at[0])}. Every other empty cell there is blocked by a ${d} that sees it.`,unit:UN[u],cells:[],target:at[0],digit:d};
+  }
+  for(let u=0;u<27;u++){
+    const cs=UN[u].filter(i=>!S.v[i]&&POP[C[i]]==2);
+    for(let a=0;a<cs.length;a++)for(let b=a+1;b<cs.length;b++)if(C[cs[a]]==C[cs[b]]){
+      const m=C[cs[a]],el=UN[u].filter(i=>i!=cs[a]&&i!=cs[b]&&!S.v[i]&&(C[i]&m)).map(i=>[i,C[i]&m]);
+      if(el.length)return{t:'Naked pair',g:`Look at ${UNAME(u)}: two cells share the same two candidates (a naked pair).`,f:`${rc(cs[a])} and ${rc(cs[b])} can only hold ${dg(m).join(' and ')}, so no other cell in ${UNAME(u)} can be ${dg(m).join(' or ')}. Remove: ${lst(el)}.`,unit:UN[u],cells:[cs[a],cs[b]],target:null,elims:el};
+    }
+  }
+  for(let u=18;u<27;u++)for(let d=1;d<10;d++){
+    if(UN[u].some(i=>S.v[i]==d))continue;
+    const at=UN[u].filter(i=>C[i]>>d&1);if(at.length<2)continue;
+    for(const[key,line]of[[i=>i/9|0,k=>UN[k]],[i=>i%9,k=>UN[9+k]]]){
+      const k0=key(at[0]);if(!at.every(i=>key(i)==k0))continue;
+      const el=line(k0).filter(i=>bx(i)!=u-18&&(C[i]>>d&1)).map(i=>[i,1<<d]);
+      if(el.length)return{t:at.length==2?'Pointing pair':'Pointing triple',g:`Look at ${UNAME(u)}: a digit there is stuck on a single line (a pointing pair).`,f:`In ${UNAME(u)}, the ${d} can only go in ${at.map(rc).join(', ')}, all on one line, so no other cell on that line can be ${d}. Remove: ${lst(el)}.`,unit:UN[u],cells:at,target:null,elims:el};
+    }
+  }
+  for(let u=0;u<18;u++)for(let d=1;d<10;d++){
+    if(UN[u].some(i=>S.v[i]==d))continue;
+    const at=UN[u].filter(i=>C[i]>>d&1);if(at.length<2)continue;
+    const b=bx(at[0]);if(!at.every(i=>bx(i)==b))continue;
+    const el=UN[18+b].filter(i=>!UN[u].includes(i)&&(C[i]>>d&1)).map(i=>[i,1<<d]);
+    if(el.length)return{t:'Box-line reduction',g:`Look at ${UNAME(u)}: a digit there fits in only one box (box-line reduction).`,f:`In ${UNAME(u)}, the ${d} must go inside ${UNAME(18+b)}, so no other cell of that box can be ${d}. Remove: ${lst(el)}.`,unit:UN[u],cells:at,target:null,elims:el};
+  }
+  for(let u=0;u<27;u++)for(let a=1;a<10;a++)for(let b=a+1;b<10;b++){
+    const pa=UN[u].filter(i=>C[i]>>a&1),pb=UN[u].filter(i=>C[i]>>b&1);
+    if(pa.length!=2||pb.length!=2||pa[0]!=pb[0]||pa[1]!=pb[1])continue;
+    const m=(1<<a)|(1<<b),el=pa.map(i=>[i,C[i]&~m]).filter(x=>x[1]);
+    if(el.length)return{t:'Hidden pair',g:`Look at ${UNAME(u)}: two digits only fit in the same two cells (a hidden pair).`,f:`In ${UNAME(u)}, ${a} and ${b} can only go in ${rc(pa[0])} and ${rc(pa[1])}, so those two cells can't hold anything else. Remove: ${lst(el)}.`,unit:UN[u],cells:pa,target:null,elims:el};
+  }
+  let best=-1;for(let i=0;i<81;i++)if(!S.v[i]&&(best<0||POP[C[i]]<POP[C[best]]))best=i;
+  if(best<0)return null;
+  return{t:'Next step',g:'No simple pattern (singles, pairs, pointing pairs) is available here. This one needs a deeper technique.',f:`${rc(best)} is ${S.sol[best]}. Try to work out why: look at what its row, column and box rule out.`,unit:[],cells:[],target:best,digit:S.sol[best]};
+}
+function applyHint(){
+  const h=HN;if(!h)return;
+  if(h.erase!==undefined){snap();S.v[h.erase]=0;S.notes[h.erase]=0;return after()}
+  if(h.digit){const i=h.target,d=h.digit;snap();S.sel=i;S.v[i]=d;S.notes[i]=0;for(const j of PE[i])S.notes[j]&=~(1<<d);return after()}
+  snap();S.elim=S.elim||Array(81).fill(0);
+  for(const[i,m]of h.elims){S.elim[i]|=m;S.notes[i]&=~m}
+  after();
+}
+function drawHint(){
+  const b=$('#hintbar');
+  if(!HN){b.hidden=true;return}
+  b.hidden=false;
+  const act=HN.erase!==undefined?'Clear it':HN.digit?'Place it':'Apply';
+  b.innerHTML=`<b>${HN.t}</b><span>${HN.lvl?HN.f:HN.g}</span><div class="hb">${HN.lvl?`<button class="go" data-h="apply">${act}</button>`:'<button data-h="more">Explain</button>'}<button data-h="x">✕ Close</button></div>`;
+}
+function snap(){HN=null;S.hist.push({v:S.v.slice(),notes:S.notes.slice(),mist:S.mist,elim:(S.elim||Array(81).fill(0)).slice()});if(S.hist.length>200)S.hist.shift()}
 function put(n){
   const i=S.sel;if(i<0||S.given[i]||S.done)return;
   if(S.nm){if(S.v[i])return;snap();S.notes[i]^=1<<n}
@@ -258,15 +345,17 @@ function after(){
 $('#board').addEventListener('click',e=>{const c=e.target.closest('.c');if(!c)return;S.sel=+c.dataset.i;render()});
 $('#pad').innerHTML=[...Array(9)].map((_,i)=>`<button data-n="${i+1}">${i+1}<small></small></button>`).join('');
 $('#pad').addEventListener('click',e=>{const b=e.target.closest('button');if(b)put(+b.dataset.n)});
-$('#undo').onclick=()=>{const h=S.hist.pop();if(!h||S.done)return;S.v=h.v;S.notes=h.notes;S.mist=h.mist;save();render()};
+$('#undo').onclick=()=>{const h=S.hist.pop();if(!h||S.done)return;S.v=h.v;S.notes=h.notes;S.mist=h.mist;S.elim=h.elim||Array(81).fill(0);save();render()};
 $('#erase').onclick=()=>{const i=S.sel;if(i<0||S.given[i]||S.done||(!S.v[i]&&!S.notes[i]))return;snap();S.v[i]=0;S.notes[i]=0;save();render()};
 $('#notes').onclick=()=>{S.nm=!S.nm;render()};
 $('#hint').onclick=()=>{
-  if(S.done)return;let i=S.sel;
-  if(i<0||S.given[i]||S.v[i]===S.sol[i]){
-    const c=[...Array(81).keys()].filter(j=>S.v[j]!==S.sol[j]);if(!c.length)return;i=c[Math.random()*c.length|0];
-  }
-  snap();S.sel=i;S.v[i]=S.sol[i];S.notes[i]=0;after();
+  if(S.done)return;
+  if(HN){HN.lvl=1;render();return}
+  HN=findHint();if(HN){HN.lvl=0}render();
+};
+$('#hintbar').onclick=e=>{
+  const b=e.target.closest('button');if(!b||!HN)return;const a=b.dataset.h;
+  if(a=='x'){HN=null;render()}else if(a=='more'){HN.lvl=1;render()}else if(a=='apply')applyHint();
 };
 $('#new').onclick=()=>{$('#cont').hidden=!S||S.done;$('#menu').classList.add('show')};
 $('#cont').onclick=()=>$('#menu').classList.remove('show');
@@ -309,5 +398,6 @@ try{const s=JSON.parse(localStorage.getItem('sdk1'));if(s&&s.v&&s.v.length===81&
 if(S){render();startTimer()}
 else{S={given:Array(81).fill(false),v:Array(81).fill(0),sol:Array(81).fill(0),notes:Array(81).fill(0),sel:-1,nm:false,mist:0,t:0,hist:[],d:0,done:true};render();$('#menu').classList.add('show')}
 </script>
+<script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))</script>
 </body>
 </html>
