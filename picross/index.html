@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>絵 Picross</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="絵">
+<meta name="theme-color" content="#e6e0cf">
+<link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("pc-t")||"light"}catch(e){}</script>
+<script>try{if(localStorage.getItem("dys")=="1")document.documentElement.setAttribute("data-dys","")}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;800&family=Zen+Dots&family=Zen+Kaku+Gothic+New:wght@500;700&family=Zen+Antique&family=Hina+Mincho&family=Reggae+One&family=Dela+Gothic+One&family=Potta+One&family=Yusei+Magic&family=Kaisei+Tokumin&family=Kiwi+Maru&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--ui:"Zen Kaku Gothic New",sans-serif}
+:root,[data-theme="light"]{--bg:#e6e0cf;--ink:#16283f;--face:#fbf7ea;--accent:#c23b2e;--edge:#16283f;--btn:#f3eedd;--wave:#2c5f8f;--waveo:.16;--p1:#2c5f8f;--p2:#c99a2e;--p3:#3f8f7f;--p4:#7a4a72;--p5:#5b6b7a;--gl:0;--disp:"Shippori Mincho",serif}
+[data-theme="dark"]{--bg:#0b0820;--ink:#e8e4ff;--face:#0b0820;--accent:#ff2e9a;--edge:#ff2e9a;--btn:#14103a;--wave:#2de2e6;--waveo:.13;--p1:#1fb8bd;--p2:#9a4de0;--p3:#5fc43a;--p4:#e0b020;--p5:#3d64d8;--gl:10;--disp:"Zen Dots",sans-serif}
+[data-theme="samurai"]{--bg:#0e0d0d;--ink:#ece3cf;--accent:#b3121c;--edge:#9aa3ab;--btn:#1b1818;--wave:#9aa3ab;--waveo:0.09;--pat:url(#sg);--disp:"Zen Antique",serif;--face:#ece3cf;--p1:#b3121c;--p2:#e6d9bd;--p3:#8f98a0;--p4:#6e1a1a;--p5:#5f6f80;--gl:0}
+[data-theme="ninja"]{--bg:#090d0a;--ink:#dfe8e0;--accent:#2f8a55;--edge:#566a5c;--btn:#121a15;--wave:#6f8f78;--waveo:0.09;--pat:url(#sg);--disp:"Reggae One",serif;--face:#dfe8e0;--p1:#2f8a55;--p2:#8fd1a2;--p3:#6f8f78;--p4:#b7c6bb;--p5:#4d6a58;--gl:0}
+[data-theme="geisha"]{--bg:#efd5d6;--ink:#3a1722;--face:#fbf4ef;--accent:#c4203c;--edge:#c99a2e;--btn:#fbf4ef;--wave:#c4203c;--waveo:.11;--p1:#6b3a8c;--p2:#d9798f;--p3:#b8851f;--p4:#3f8f8f;--p5:#8c4a6a;--gl:0;--disp:"Hina Mincho",serif}
+[data-theme="kabuki"]{--bg:#f6e6b0;--ink:#151010;--accent:#d4112e;--edge:#151010;--btn:#fffaf0;--wave:#d4112e;--waveo:0.1;--pat:url(#kb);--disp:"Dela Gothic One",sans-serif;--face:#fffaf0;--p1:#d4112e;--p2:#f2c200;--p3:#2f8f3a;--p4:#151010;--p5:#ee7b1e;--gl:0}
+[data-theme="dragon"]{--bg:#1a0606;--ink:#f6e7c8;--accent:#c8281e;--edge:#e0b040;--btn:#2a0d0c;--wave:#e0b040;--waveo:0.13;--pat:url(#ur);--disp:"Potta One",sans-serif;--face:#f6e7c8;--p1:#c8281e;--p2:#e0b040;--p3:#e8552b;--p4:#f2d98a;--p5:#8f1d17;--gl:4}
+[data-theme="koi"]{--bg:#150e0a;--ink:#f7f1e6;--accent:#f26a1d;--edge:#f7f1e6;--btn:#251710;--wave:#8a5a2b;--waveo:0.16;--pat:url(#rp);--disp:"Yusei Magic",sans-serif;--face:#f7f1e6;--p1:#f26a1d;--p2:#f7f1e6;--p3:#17120f;--p4:#8a5a2b;--p5:#c98a4b;--gl:0}
+[data-theme="imperial"]{--bg:#ede6f5;--ink:#2a1747;--accent:#6b3fa0;--edge:#c9a227;--btn:#fffdf8;--wave:#c9a227;--waveo:0.16;--pat:url(#ki);--disp:"Kaisei Tokumin",serif;--face:#fffdf8;--p1:#6b3fa0;--p2:#c9a227;--p3:#c8321f;--p4:#2f8f78;--p5:#3b4f9a;--gl:0}
+[data-theme="kitsune"]{--bg:#05061a;--ink:#dfe6ff;--accent:#4a5cff;--edge:#7a6cff;--btn:#0d1033;--wave:#5b6cff;--waveo:0.13;--pat:url(#fx);--disp:"Kiwi Maru",serif;--face:#dfe6ff;--p1:#4a5cff;--p2:#a34dff;--p3:#2a2f8f;--p4:#7a6cff;--p5:#dfe6ff;--gl:10}
+@font-face{font-family:"OpenDyslexic";font-style:normal;font-weight:400;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-400-normal.woff2) format("woff2"),url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-400-normal.woff) format("woff")}
+@font-face{font-family:"OpenDyslexic";font-style:normal;font-weight:700;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-700-normal.woff2) format("woff2"),url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-700-normal.woff) format("woff")}
+:root[data-dys][data-theme]{--ui:"OpenDyslexic","Zen Kaku Gothic New",sans-serif;--disp:"OpenDyslexic","Zen Kaku Gothic New",sans-serif;--num:"OpenDyslexic","Zen Kaku Gothic New",sans-serif}
+.dysbtn{flex:none;width:34px;height:34px;border:2px solid var(--ink);border-radius:50%;background:transparent;color:var(--ink);font:800 13px var(--ui);padding:0}
+.dysbtn.on{background:var(--ink);color:var(--bg)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--ui);overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+:root{--panel:color-mix(in srgb,var(--bg) 82%,var(--ink))}
+.bg{position:fixed;inset:0;width:100%;height:100%;color:var(--wave);opacity:var(--waveo);pointer-events:none}
+.bg rect{fill:var(--pat,url(#sg))}
+.app{position:relative;height:100%;max-width:640px;margin:0 auto;padding:10px;display:flex;flex-direction:column;gap:8px}
+.top{display:flex;align-items:center;gap:8px;font:700 13px var(--ui)}
+.top h1{margin:0;font:800 21px var(--disp);text-shadow:0 0 calc(var(--gl)*1px) var(--accent)}
+.top .st{margin-left:auto;text-align:right;line-height:1.25}
+.btn,select{border:2px solid var(--ink);background:var(--btn);color:var(--ink);font:700 14px var(--ui);border-radius:10px;padding:9px 8px}
+.btn.go{background:var(--accent);border-color:var(--accent);color:var(--face)}
+.btn.on{background:var(--ink);color:var(--bg)}
+.btn:disabled{opacity:.4}
+button:active{transform:scale(.97)}
+.stage{flex:1;min-height:0;display:grid;place-items:center;position:relative}
+.bar{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px}
+.ov{position:fixed;inset:0;z-index:5;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(4px);display:none;place-items:center;padding:14px}
+.ov.show{display:grid}
+.card{width:min(420px,100%);max-height:94dvh;overflow:auto;background:var(--bg);border:3px solid var(--edge);padding:16px;text-align:center;display:grid;gap:9px}
+.card h2{margin:0;font:800 26px var(--disp);color:var(--accent);text-shadow:0 0 calc(var(--gl)*1px) var(--accent)}
+.card p{margin:0;opacity:.85;font-size:14px}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between;font:700 13px var(--ui)}
+.seg{display:flex;border:2px solid var(--ink);border-radius:18px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--ink);font:700 13px var(--ui);padding:5px 12px}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:7px 14px;border-radius:16px;font:700 13px var(--ui);opacity:0;pointer-events:none;transition:opacity .25s;z-index:20;max-width:90%;text-align:center}#toast.show{opacity:1}
+@keyframes pl{to{filter:brightness(1.45)}}
+
+#pg{display:grid;gap:0;touch-action:none;margin:auto;font-family:var(--disp)}
+.cc{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;font:700 calc(var(--cs)*.42)/1.15 var(--disp);padding-bottom:3px;color:var(--ink)}
+.rc{display:flex;justify-content:flex-end;align-items:center;gap:calc(var(--cs)*.2);font:700 calc(var(--cs)*.42)/1 var(--disp);padding-right:5px;color:var(--ink)}
+.cc span.ok,.rc span.ok{opacity:.28}
+.pc{width:var(--cs);height:var(--cs);background:var(--panel);border:1px solid color-mix(in srgb,var(--ink) 22%,transparent);display:grid;place-items:center;font:700 calc(var(--cs)*.6)/1 var(--disp);color:color-mix(in srgb,var(--ink) 55%,transparent)}
+.pc.f{background:var(--accent);box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--face) 25%,transparent)}
+.pc.r5{border-right:2px solid var(--ink)}.pc.b5{border-bottom:2px solid var(--ink)}
+.pc.win{background:var(--p1)}
+
+</style>
+</head>
+<body>
+<svg class="bg" aria-hidden="true"><defs><pattern id="sg" width="44" height="22" patternUnits="userSpaceOnUse"><g fill="var(--bg)" stroke="currentColor" stroke-width="1.2"><g id="sc"><circle cx="0" cy="11" r="22"/><circle cx="0" cy="11" r="16.5"/><circle cx="0" cy="11" r="11"/><circle cx="0" cy="11" r="5.5"/></g><use href="#sc" x="44"/><use href="#sc" x="22" y="11"/></g></pattern><pattern id="kb" width="60" height="60" patternUnits="userSpaceOnUse"><rect width="20" height="60" fill="#d4112e"/><rect x="20" width="20" height="60" fill="#f2c200"/><rect x="40" width="20" height="60" fill="#151010"/></pattern><pattern id="ur" width="36" height="31" patternUnits="userSpaceOnUse"><path d="M0 31L18 0L36 31ZM-18 0L0 31M36 31L54 0" fill="none" stroke="currentColor" stroke-width="1.4"/></pattern><pattern id="rp" width="70" height="70" patternUnits="userSpaceOnUse"><g fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="20" cy="20" r="6"/><circle cx="20" cy="20" r="13"/><circle cx="20" cy="20" r="20"/><circle cx="52" cy="52" r="5"/><circle cx="52" cy="52" r="11"/></g></pattern><g id="kk" fill="none" stroke="currentColor" stroke-width="1.1"><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(0)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(30)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(60)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(90)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(120)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(150)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(180)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(210)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(240)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(270)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(300)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(330)"/></g><pattern id="ki" width="56" height="56" patternUnits="userSpaceOnUse"><use href="#kk" x="14" y="14"/><use href="#kk" transform="translate(42 42) scale(.7)"/></pattern><pattern id="fx" width="48" height="48" patternUnits="userSpaceOnUse"><g fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 5C18 12 19 19 12 26C5 19 6 12 12 5Z"/><path d="M36 26C42 33 43 40 36 47C29 40 30 33 36 26Z"/><path d="M12 14C14 17 14 20 12 22"/></g></pattern></defs><rect width="100%" height="100%" fill="url(#sg)"/></svg>
+<div class="app">
+  <div class="top"><h1>絵</h1><span class="st" id="info"></span><button id="bm" class="dysbtn" aria-label="Menu">☰</button></div>
+  <div class="stage"><div id="pg"></div></div>
+  <div class="bar"><button class="btn" id="tool">■ Fill</button><button class="btn" id="clr">消 Clear</button></div>
+</div>
+<div class="ov" id="ov"></div>
+<div id="toast"></div>
+<script>
+const TITLE="絵 Picross",KEY="pc";
+const $=s=>document.querySelector(s);
+const get=k=>{try{return localStorage.getItem(k)}catch(e){return null}},put=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+const TH=[['light','Woodblock 浮世絵','#e6e0cf'],['dark','Neon ネオン','#0b0820'],['samurai','Samurai 侍','#0e0d0d'],['ninja','Ninja 忍','#090d0a'],['geisha','Geisha 芸者','#efd5d6'],['kabuki','Kabuki 歌舞伎','#f6e6b0'],['dragon','Dragon 龍','#1a0606'],['koi','Koi 鯉','#150e0a'],['imperial','Imperial 皇室','#ede6f5'],['kitsune','Kitsune 狐','#05061a']];
+const sleep=ms=>new Promise(r=>setTimeout(r,ms)),rnd=n=>Math.random()*n|0;
+const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const fmt=t=>(t/60|0)+':'+String(t%60).padStart(2,'0');
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function setTheme(t){
+  document.documentElement.dataset.theme=t;put(KEY+'-t',t);
+  document.querySelector('meta[name=theme-color]').content=(TH.find(x=>x[0]==t)||TH[0])[2];
+  if(typeof onTheme=='function')onTheme();
+}
+function toggleDys(){
+  const on=!document.documentElement.hasAttribute('data-dys');
+  document.documentElement.toggleAttribute('data-dys',on);put('dys',on?'1':'0');
+  (document.fonts&&document.fonts.load('16px OpenDyslexic')||Promise.resolve()).catch(()=>{}).then(()=>setTheme(document.documentElement.dataset.theme));
+}
+const dysLabel=()=>'Dyslexia font: '+(document.documentElement.hasAttribute('data-dys')?'On':'Off');
+function toast(m,ms){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),ms||2400)}
+function ui(h){const o=$('#ov');o.innerHTML=h;o.classList.add('show')}
+function hideUi(){$('#ov').classList.remove('show')}
+function openMenu(){
+  ui(`<div class="card"><h2>${TITLE}</h2>${typeof menuHTML=='function'?menuHTML():''}<select id="th" aria-label="Style">${TH.map(t=>`<option value="${t[0]}"${document.documentElement.dataset.theme==t[0]?' selected':''}>${t[1]}</option>`).join('')}</select><button class="btn" data-a="dys">${dysLabel()}</button><button class="btn" data-a="close">Close</button></div>`);
+}
+$('#ov').onclick=e=>{
+  const b=e.target.closest('button');if(!b)return;const a=b.dataset.a;if(!a)return;
+  if(a=='close')hideUi();else if(a=='dys'){toggleDys();openMenu()}else if(typeof act=='function')act(a,b);
+};
+$('#ov').onchange=e=>{if(e.target.id=='th')setTheme(e.target.value)};
+$('#bm').onclick=openMenu;
+
+
+const PIC=[
+ ['Sun','日',(u,v)=>(u-5)**2+(v-5)**2<=16],
+ ['Moon','月',(u,v)=>(u-5)**2+(v-5)**2<=17&&(u-6.5)**2+(v-4)**2>11],
+ ['Fuji','富',(u,v)=>v>2.2&&Math.abs(u-5)<=(v-2)*.62],
+ ['Torii','門',(u,v)=>v<1.7||(v>=2.6&&v<3.7&&u>1&&u<9)||((u>1.7&&u<3||u>7&&u<8.3)&&v>=1.7)],
+ ['Lantern','灯',(u,v)=>((u-5)/3)**2+((v-5)/3.8)**2<=1||(v<1&&u>3.4&&u<6.6)||(v>9&&u>3.4&&u<6.6)],
+ ['Koi','鯉',(u,v)=>((u-4.2)/3.7)**2+((v-5)/2.4)**2<=1||(u>7.5&&Math.abs(v-5)<(u-7)*1.5)],
+ ['Wave','波',(u,v)=>v>5.4+1.8*Math.sin(u*.95)],
+ ['Blossom','桜',(u,v)=>[[5,2.5],[7.6,4.3],[6.6,7.5],[3.4,7.5],[2.4,4.3]].some(p=>(u-p[0])**2+(v-p[1])**2<=4.2)||(u-5)**2+(v-5)**2<=1.6],
+ ['Diamond','菱',(u,v)=>Math.abs(u-5)+Math.abs(v-5)<=4.4],
+ ['Bamboo','竹',(u,v)=>(u>=4&&u<6)||((v>2&&v<3.2||v>6&&v<7.2)&&u>=2&&u<8)]
+];
+const OK=[[0, 5], [2, 5], [3, 5], [4, 5], [5, 5], [6, 5], [7, 5], [8, 5], [9, 5], [0, 10], [2, 10], [3, 10], [4, 10], [5, 10], [6, 10], [7, 10], [8, 10], [9, 10], [0, 15], [2, 15], [3, 15], [4, 15], [5, 15], [6, 15], [7, 15], [8, 15], [9, 15]];
+const runs=l=>{const r=[];let n=0;for(const v of l){if(v==1)n++;else if(n){r.push(n);n=0}}if(n)r.push(n);return r};
+function lineSolve(cl,line){
+  const n=line.length,a0=Array(n).fill(0),a1=Array(n).fill(0),cur=Array(n).fill(0);let ok=0;
+  (function rec(b,p){
+    if(b==cl.length){for(let i=p;i<n;i++)if(line[i]==1)return;for(let i=p;i<n;i++)cur[i]=0;ok=1;for(let i=0;i<n;i++)cur[i]?a1[i]=1:a0[i]=1;return}
+    const rest=cl.slice(b+1).reduce((s,x)=>s+x+1,0);
+    for(let s=p;s+cl[b]+rest<=n;s++){
+      if(s>p&&line[s-1]==1)break;
+      let good=true;for(let i=s;i<s+cl[b];i++)if(line[i]==0){good=false;break}
+      if(good&&s+cl[b]<n&&line[s+cl[b]]==1)good=false;
+      if(!good)continue;
+      for(let i=p;i<s;i++)cur[i]=0;for(let i=s;i<s+cl[b];i++)cur[i]=1;if(s+cl[b]<n)cur[s+cl[b]]=0;
+      rec(b+1,Math.min(n,s+cl[b]+1));
+    }
+  })(0,0);
+  if(!ok)return null;
+  return line.map((v,i)=>v>=0?v:(a1[i]&&!a0[i]?1:a0[i]&&!a1[i]?0:-1));
+}
+function cluesOf(g,n){const rows=[],cols=[];for(let y=0;y<n;y++)rows.push(runs(g.slice(y*n,y*n+n)));for(let x=0;x<n;x++)cols.push(runs(Array.from({length:n},(_,y)=>g[y*n+x])));return{rows,cols}}
+function logicSolvable(g,n){
+  const{rows,cols}=cluesOf(g,n),k=Array(n*n).fill(-1);let ch=true;
+  while(ch){ch=false;
+    for(let y=0;y<n;y++){const r=lineSolve(rows[y],k.slice(y*n,y*n+n));if(!r)return false;r.forEach((v,x)=>{if(k[y*n+x]!=v){k[y*n+x]=v;ch=true}})}
+    for(let x=0;x<n;x++){const r=lineSolve(cols[x],Array.from({length:n},(_,y)=>k[y*n+x]));if(!r)return false;r.forEach((v,y)=>{if(k[y*n+x]!=v){k[y*n+x]=v;ch=true}})}
+  }
+  return k.every(v=>v>=0);
+}
+const pic=(i,n)=>{const g=[];for(let y=0;y<n;y++)for(let x=0;x<n;x++)g.push(PIC[i][2]((x+.5)*10/n,(y+.5)*10/n)?1:0);return g};
+function randomPuzzle(n){for(let t=0;t<400;t++){const g=Array.from({length:n*n},()=>Math.random()<(n<8?.62:.55)?1:0);if(g.every(v=>!v))continue;if(logicSolvable(g,n))return g}return pic(0,n)}
+let P=null,u=[],n=10,cs=30,sec=0,tm=null,done=false,tool=0,paint=null,prog={};
+try{prog=JSON.parse(get('pc-p'))||{}}catch(e){}
+function load(spec){
+  P=spec;n=spec.n;u=Array(n*n).fill(0);done=false;sec=0;clearInterval(tm);
+  tm=setInterval(()=>{if(!done&&!document.hidden){sec++;hud()}},1000);
+  const c=cluesOf(P.g,n);P.rows=c.rows;P.cols=c.cols;hideUi();render();
+}
+function fit(){
+  const mr=Math.max(...P.rows.map(r=>r.length)),mc=Math.max(...P.cols.map(r=>r.length));
+  cs=Math.floor(Math.min((innerWidth-24)/(n+mr*.6),(innerHeight-220)/(n+mc*.55),46));
+  document.documentElement.style.setProperty('--cs',cs+'px');
+}
+function render(){
+  fit();const g=$('#pg');g.style.gridTemplateColumns=`auto repeat(${n},var(--cs))`;
+  const rs=rowsOk(),cl=colsOk();let h='<div></div>';
+  for(let x=0;x<n;x++)h+=`<div class="cc">${P.cols[x].length?P.cols[x].map(v=>`<span class="${cl[x]?'ok':''}">${v}</span>`).join(''):`<span class="${cl[x]?'ok':''}">0</span>`}</div>`;
+  for(let y=0;y<n;y++){
+    h+=`<div class="rc">${P.rows[y].length?P.rows[y].map(v=>`<span class="${rs[y]?'ok':''}">${v}</span>`).join(''):`<span class="${rs[y]?'ok':''}">0</span>`}</div>`;
+    for(let x=0;x<n;x++){const i=y*n+x,s=u[i];h+=`<div class="pc${s==1?(done?' f win':' f'):''}${(x+1)%5==0&&x<n-1?' r5':''}${(y+1)%5==0&&y<n-1?' b5':''}" data-i="${i}">${s==2?'×':''}</div>`}
+  }
+  g.innerHTML=h;hud();
+}
+const same=(a,b)=>a.length==b.length&&a.every((v,i)=>v==b[i]);
+const rowsOk=()=>P.rows.map((c,y)=>same(runs(u.slice(y*n,y*n+n)),c));
+const colsOk=()=>P.cols.map((c,x)=>same(runs(Array.from({length:n},(_,y)=>u[y*n+x])),c));
+function solved(){return rowsOk().every(Boolean)&&colsOk().every(Boolean)}
+function hud(){$('#info').innerHTML=`${P.name}<br>${n}×${n} · ${fmt(sec)}`}
+function applyCell(i){
+  const s=u[i];
+  if(paint==null)paint=tool?(s==2?0:2):(s==1?0:1);
+  if(tool&&s==1)return false;
+  if(u[i]==paint)return false;
+  u[i]=paint;return true;
+}
+function endPaint(){
+  if(paint==null)return;paint=null;render();
+  if(!done&&solved()){
+    done=true;clearInterval(tm);const k=P.id,b=prog[k],nw=!b||sec<b;if(nw){prog[k]=sec;put('pc-p',JSON.stringify(prog))}
+    render();setTimeout(()=>ui(`<div class="card"><h2>${P.kan||'絵'} ${P.name}</h2><p>Solved in ${fmt(sec)}${nw?' · new best!':''}</p><button class="btn go" data-a="next">Next puzzle</button><button class="btn" data-a="menu">Puzzle list</button></div>`),500);
+  }
+}
+const cellAt=e=>{const el=document.elementFromPoint(e.clientX,e.clientY);return el&&el.classList&&el.classList.contains('pc')?el:null};
+$('#pg').addEventListener('pointerdown',e=>{if(done)return;const el=e.target.closest('.pc');if(!el)return;paint=null;const i=+el.dataset.i;if(applyCell(i)){el.classList.toggle('f',u[i]==1);el.textContent=u[i]==2?'×':''}});
+$('#pg').addEventListener('pointermove',e=>{if(paint==null||done)return;const el=cellAt(e);if(!el)return;const i=+el.dataset.i;if(applyCell(i)){el.classList.toggle('f',u[i]==1);el.textContent=u[i]==2?'×':''}});
+addEventListener('pointerup',endPaint);addEventListener('pointercancel',endPaint);
+$('#tool').onclick=()=>{tool=tool?0:1;$('#tool').textContent=tool?'× Mark':'■ Fill';$('#tool').classList.toggle('on',!!tool)};
+$('#clr').onclick=()=>{if(done)return;u=Array(n*n).fill(0);render()};
+let cur=-1;
+function spec(i,sz){return{id:i+'-'+sz,g:pic(i,sz),n:sz,name:PIC[i][0],kan:PIC[i][1]}}
+function nextSpec(){
+  const todo=OK.filter(o=>!prog[o[0]+'-'+o[1]]);const o=(todo.length?todo:OK)[todo.length?0:rnd(OK.length)];return spec(o[0],o[1]);
+}
+function menuHTML(){
+  return `<p>Fill the squares so each row and column matches its number clues. Tap or drag to fill, switch to Mark to cross out squares. A greyed clue means that line is done.</p>
+  <div class="grid2" style="grid-template-columns:repeat(3,1fr)">${[5,10,15].map(s=>`<button class="btn" data-a="r${s}">Random ${s}×${s}</button>`).join('')}</div>
+  <div class="grid2" style="grid-template-columns:repeat(3,1fr);max-height:34vh;overflow:auto">${OK.map(o=>`<button class="btn${prog[o[0]+'-'+o[1]]?' on':''}" data-a="p${o[0]}-${o[1]}">${PIC[o[0]][1]} ${o[1]}${prog[o[0]+'-'+o[1]]?' ✓':''}</button>`).join('')}</div>`;
+}
+function act(a){
+  if(a=='next')load(nextSpec());else if(a=='menu')openMenu();
+  else if(a[0]=='r'){const s=+a.slice(1);load({id:'r'+s+'-'+Date.now(),g:randomPuzzle(s),n:s,name:'Random',kan:'絵'})}
+  else if(a[0]=='p'){const[i,s]=a.slice(1).split('-').map(Number);load(spec(i,s))}
+}
+addEventListener('resize',()=>P&&render());
+function boot(){load(nextSpec())}
+
+setTheme(document.documentElement.dataset.theme||'light');
+if(typeof boot=='function')boot();
+</script>
+<script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))</script>
+</body>
+</html>
