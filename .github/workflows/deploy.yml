@@ -1,0 +1,36 @@
+name: Deploy apps
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      all:
+        description: Rebuild and redeploy every app
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: self-hosted          # the runner on the box that hosts the containers
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build, run and publish changed apps
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          DEPLOY_ALL: ${{ inputs.all }}
+          PANGOLIN_URL: ${{ vars.PANGOLIN_URL }}
+          PANGOLIN_ORG: ${{ vars.PANGOLIN_ORG }}
+          PANGOLIN_SITE: ${{ vars.PANGOLIN_SITE }}
+          PANGOLIN_DOMAIN: ${{ vars.PANGOLIN_DOMAIN }}
+          PANGOLIN_TARGET_HOST: ${{ vars.PANGOLIN_TARGET_HOST }}
+          PANGOLIN_API_KEY: ${{ secrets.PANGOLIN_API_KEY }}
+        run: bash deploy/deploy.sh
