@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>神社守 Shrine Keeper</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="神社守">
+<meta name="theme-color" content="#e6e0cf">
+<link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("sk-t")||"light"}catch(e){}</script>
+<script>try{if(localStorage.getItem("dys")=="1")document.documentElement.setAttribute("data-dys","")}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;800&family=Zen+Dots&family=Zen+Kaku+Gothic+New:wght@500;700&family=Zen+Antique&family=Hina+Mincho&family=Reggae+One&family=Dela+Gothic+One&family=Potta+One&family=Yusei+Magic&family=Kaisei+Tokumin&family=Kiwi+Maru&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--ui:"Zen Kaku Gothic New",sans-serif}
+:root,[data-theme="light"]{--bg:#e6e0cf;--ink:#16283f;--face:#fbf7ea;--accent:#c23b2e;--edge:#16283f;--btn:#f3eedd;--wave:#2c5f8f;--waveo:.16;--p1:#2c5f8f;--p2:#c99a2e;--p3:#3f8f7f;--p4:#7a4a72;--p5:#5b6b7a;--gl:0;--disp:"Shippori Mincho",serif}
+[data-theme="dark"]{--bg:#0b0820;--ink:#e8e4ff;--face:#0b0820;--accent:#ff2e9a;--edge:#ff2e9a;--btn:#14103a;--wave:#2de2e6;--waveo:.13;--p1:#1fb8bd;--p2:#9a4de0;--p3:#5fc43a;--p4:#e0b020;--p5:#3d64d8;--gl:10;--disp:"Zen Dots",sans-serif}
+[data-theme="samurai"]{--bg:#0e0d0d;--ink:#ece3cf;--accent:#b3121c;--edge:#9aa3ab;--btn:#1b1818;--wave:#9aa3ab;--waveo:0.09;--pat:url(#sg);--disp:"Zen Antique",serif;--face:#ece3cf;--p1:#b3121c;--p2:#e6d9bd;--p3:#8f98a0;--p4:#6e1a1a;--p5:#5f6f80;--gl:0}
+[data-theme="ninja"]{--bg:#090d0a;--ink:#dfe8e0;--accent:#2f8a55;--edge:#566a5c;--btn:#121a15;--wave:#6f8f78;--waveo:0.09;--pat:url(#sg);--disp:"Reggae One",serif;--face:#dfe8e0;--p1:#2f8a55;--p2:#8fd1a2;--p3:#6f8f78;--p4:#b7c6bb;--p5:#4d6a58;--gl:0}
+[data-theme="geisha"]{--bg:#efd5d6;--ink:#3a1722;--face:#fbf4ef;--accent:#c4203c;--edge:#c99a2e;--btn:#fbf4ef;--wave:#c4203c;--waveo:.11;--p1:#6b3a8c;--p2:#d9798f;--p3:#b8851f;--p4:#3f8f8f;--p5:#8c4a6a;--gl:0;--disp:"Hina Mincho",serif}
+[data-theme="kabuki"]{--bg:#f6e6b0;--ink:#151010;--accent:#d4112e;--edge:#151010;--btn:#fffaf0;--wave:#d4112e;--waveo:0.1;--pat:url(#kb);--disp:"Dela Gothic One",sans-serif;--face:#fffaf0;--p1:#d4112e;--p2:#f2c200;--p3:#2f8f3a;--p4:#151010;--p5:#ee7b1e;--gl:0}
+[data-theme="dragon"]{--bg:#1a0606;--ink:#f6e7c8;--accent:#c8281e;--edge:#e0b040;--btn:#2a0d0c;--wave:#e0b040;--waveo:0.13;--pat:url(#ur);--disp:"Potta One",sans-serif;--face:#f6e7c8;--p1:#c8281e;--p2:#e0b040;--p3:#e8552b;--p4:#f2d98a;--p5:#8f1d17;--gl:4}
+[data-theme="koi"]{--bg:#150e0a;--ink:#f7f1e6;--accent:#f26a1d;--edge:#f7f1e6;--btn:#251710;--wave:#8a5a2b;--waveo:0.16;--pat:url(#rp);--disp:"Yusei Magic",sans-serif;--face:#f7f1e6;--p1:#f26a1d;--p2:#f7f1e6;--p3:#17120f;--p4:#8a5a2b;--p5:#c98a4b;--gl:0}
+[data-theme="imperial"]{--bg:#ede6f5;--ink:#2a1747;--accent:#6b3fa0;--edge:#c9a227;--btn:#fffdf8;--wave:#c9a227;--waveo:0.16;--pat:url(#ki);--disp:"Kaisei Tokumin",serif;--face:#fffdf8;--p1:#6b3fa0;--p2:#c9a227;--p3:#c8321f;--p4:#2f8f78;--p5:#3b4f9a;--gl:0}
+[data-theme="kitsune"]{--bg:#05061a;--ink:#dfe6ff;--accent:#4a5cff;--edge:#7a6cff;--btn:#0d1033;--wave:#5b6cff;--waveo:0.13;--pat:url(#fx);--disp:"Kiwi Maru",serif;--face:#dfe6ff;--p1:#4a5cff;--p2:#a34dff;--p3:#2a2f8f;--p4:#7a6cff;--p5:#dfe6ff;--gl:10}
+@font-face{font-family:"OpenDyslexic";font-style:normal;font-weight:400;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-400-normal.woff2) format("woff2"),url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-400-normal.woff) format("woff")}
+@font-face{font-family:"OpenDyslexic";font-style:normal;font-weight:700;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-700-normal.woff2) format("woff2"),url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@5/latin-700-normal.woff) format("woff")}
+:root[data-dys][data-theme]{--ui:"OpenDyslexic","Zen Kaku Gothic New",sans-serif;--disp:"OpenDyslexic","Zen Kaku Gothic New",sans-serif;--num:"OpenDyslexic","Zen Kaku Gothic New",sans-serif}
+.dysbtn{flex:none;width:34px;height:34px;border:2px solid var(--ink);border-radius:50%;background:transparent;color:var(--ink);font:800 13px var(--ui);padding:0}
+.dysbtn.on{background:var(--ink);color:var(--bg)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--ui);overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+:root{--panel:color-mix(in srgb,var(--bg) 82%,var(--ink))}
+.bg{position:fixed;inset:0;width:100%;height:100%;color:var(--wave);opacity:var(--waveo);pointer-events:none}
+.bg rect{fill:var(--pat,url(#sg))}
+.app{position:relative;height:100%;max-width:640px;margin:0 auto;padding:10px;display:flex;flex-direction:column;gap:8px}
+.top{display:flex;align-items:center;gap:8px;font:700 13px var(--ui)}
+.top h1{margin:0;font:800 21px var(--disp);text-shadow:0 0 calc(var(--gl)*1px) var(--accent)}
+.top .st{margin-left:auto;text-align:right;line-height:1.25}
+.btn,select{border:2px solid var(--ink);background:var(--btn);color:var(--ink);font:700 14px var(--ui);border-radius:10px;padding:9px 8px}
+.btn.go{background:var(--accent);border-color:var(--accent);color:var(--face)}
+.btn.on{background:var(--ink);color:var(--bg)}
+.btn:disabled{opacity:.4}
+button:active{transform:scale(.97)}
+.stage{flex:1;min-height:0;display:grid;place-items:center;position:relative}
+.bar{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px}
+.ov{position:fixed;inset:0;z-index:5;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(4px);display:none;place-items:center;padding:14px}
+.ov.show{display:grid}
+.card{width:min(420px,100%);max-height:94dvh;overflow:auto;background:var(--bg);border:3px solid var(--edge);padding:16px;text-align:center;display:grid;gap:9px}
+.card h2{margin:0;font:800 26px var(--disp);color:var(--accent);text-shadow:0 0 calc(var(--gl)*1px) var(--accent)}
+.card p{margin:0;opacity:.85;font-size:14px}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between;font:700 13px var(--ui)}
+.seg{display:flex;border:2px solid var(--ink);border-radius:18px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--ink);font:700 13px var(--ui);padding:5px 12px}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:7px 14px;border-radius:16px;font:700 13px var(--ui);opacity:0;pointer-events:none;transition:opacity .25s;z-index:20;max-width:90%;text-align:center}#toast.show{opacity:1}
+@keyframes pl{to{filter:brightness(1.45)}}
+
+.idle{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;position:relative}
+.hero{text-align:center;line-height:1.15}
+#mon{font:800 34px/1.1 var(--disp);text-shadow:0 0 calc(var(--gl)*1px) var(--accent)}
+#mps{font:700 13px var(--ui);opacity:.85}
+#fz{min-height:18px;font:800 13px var(--ui);color:var(--accent)}
+.bellwrap{display:grid;place-items:center;position:relative;min-height:0}
+#bell{width:min(40vw,150px);aspect-ratio:1;border-radius:50%;border:4px solid var(--edge);background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--accent) 50%,var(--face)),var(--accent));color:var(--face);font:800 64px/1 var(--disp);box-shadow:0 6px 0 color-mix(in srgb,var(--ink) 40%,transparent),0 0 calc(var(--gl)*3px) var(--accent);transition:transform .06s,box-shadow .06s}
+#bell:active,#bell.rg{transform:translateY(4px) scale(.97);box-shadow:0 2px 0 color-mix(in srgb,var(--ink) 40%,transparent),0 0 calc(var(--gl)*3px) var(--accent)}
+.fl{position:absolute;pointer-events:none;font:800 16px var(--disp);color:var(--face);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;animation:fl 1s ease-out forwards;z-index:3}
+@keyframes fl{to{transform:translateY(-70px);opacity:0}}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tabs button{padding:8px 2px;font-size:13px}
+#panel{flex:1;min-height:0;overflow:auto;display:grid;gap:7px;align-content:start;padding-bottom:6px}
+.gr{display:flex;align-items:center;gap:10px;border:2px solid var(--ink);border-radius:10px;padding:7px 8px;background:var(--btn)}
+.gr>b{font:800 26px/1 var(--disp);color:var(--accent);width:36px;text-align:center;flex:none}
+.gr>span{flex:1;min-width:0;font-size:13px;line-height:1.3}.gr small{opacity:.8}
+.gr .own{font-style:normal;font:800 14px var(--disp);color:var(--accent);margin-left:4px}
+.gr .btn{flex:none;min-width:96px;padding:6px 4px;font-size:13px}
+.gr .btn.can{background:var(--accent);border-color:var(--accent);color:var(--face)}
+.gr.lk{opacity:.4}
+.gr.done{opacity:.6}
+.bulk{display:flex;gap:6px}.bulk button{flex:1;padding:6px 0;font-size:12px}
+#koi{position:fixed;top:30%;left:-90px;z-index:9;display:none;font:800 40px/1 var(--disp);color:var(--accent);-webkit-text-stroke:2px var(--face);paint-order:stroke fill;cursor:pointer;filter:drop-shadow(0 3px 4px #0006);animation:swim 14s linear forwards}
+@keyframes swim{0%{left:-90px;transform:translateY(0)}25%{transform:translateY(-28px)}50%{transform:translateY(14px)}75%{transform:translateY(-22px)}100%{left:calc(100vw + 20px);transform:translateY(0)}}
+textarea{width:100%;height:120px;background:var(--panel);color:var(--ink);border:2px solid var(--ink);border-radius:8px;font:12px monospace;padding:6px;-webkit-user-select:text;user-select:text}
+
+</style>
+</head>
+<body>
+<svg class="bg" aria-hidden="true"><defs><pattern id="sg" width="44" height="22" patternUnits="userSpaceOnUse"><g fill="var(--bg)" stroke="currentColor" stroke-width="1.2"><g id="sc"><circle cx="0" cy="11" r="22"/><circle cx="0" cy="11" r="16.5"/><circle cx="0" cy="11" r="11"/><circle cx="0" cy="11" r="5.5"/></g><use href="#sc" x="44"/><use href="#sc" x="22" y="11"/></g></pattern><pattern id="kb" width="60" height="60" patternUnits="userSpaceOnUse"><rect width="20" height="60" fill="#d4112e"/><rect x="20" width="20" height="60" fill="#f2c200"/><rect x="40" width="20" height="60" fill="#151010"/></pattern><pattern id="ur" width="36" height="31" patternUnits="userSpaceOnUse"><path d="M0 31L18 0L36 31ZM-18 0L0 31M36 31L54 0" fill="none" stroke="currentColor" stroke-width="1.4"/></pattern><pattern id="rp" width="70" height="70" patternUnits="userSpaceOnUse"><g fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="20" cy="20" r="6"/><circle cx="20" cy="20" r="13"/><circle cx="20" cy="20" r="20"/><circle cx="52" cy="52" r="5"/><circle cx="52" cy="52" r="11"/></g></pattern><g id="kk" fill="none" stroke="currentColor" stroke-width="1.1"><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(0)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(30)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(60)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(90)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(120)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(150)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(180)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(210)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(240)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(270)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(300)"/><ellipse cy="-7" rx="2.2" ry="6" transform="rotate(330)"/></g><pattern id="ki" width="56" height="56" patternUnits="userSpaceOnUse"><use href="#kk" x="14" y="14"/><use href="#kk" transform="translate(42 42) scale(.7)"/></pattern><pattern id="fx" width="48" height="48" patternUnits="userSpaceOnUse"><g fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 5C18 12 19 19 12 26C5 19 6 12 12 5Z"/><path d="M36 26C42 33 43 40 36 47C29 40 30 33 36 26Z"/><path d="M12 14C14 17 14 20 12 22"/></g></pattern></defs><rect width="100%" height="100%" fill="url(#sg)"/></svg>
+<div class="app">
+  <div class="top"><h1>神社守</h1><span class="st" id="info"></span><button id="bm" class="dysbtn" aria-label="Menu">☰</button></div>
+  <div class="idle" id="idle">
+    <div class="hero"><div id="mon">0 Mon</div><div id="mps">0 per second</div><div id="fz"></div></div>
+    <div class="bellwrap"><button id="bell" aria-label="Ring the shrine bell">鈴</button></div>
+    <div class="tabs" id="tabs"><button class="btn on" data-t="gen">Shrine</button><button class="btn" data-t="upg">Upgrades</button><button class="btn" data-t="kami">Kami</button><button class="btn" data-t="ach">Trophies</button></div>
+    <div id="panel"></div>
+  </div>
+  <div id="koi">鯉</div>
+</div>
+<div class="ov" id="ov"></div>
+<div id="toast"></div>
+<script>
+const TITLE="神社守 Shrine Keeper",KEY="sk";
+const $=s=>document.querySelector(s);
+const get=k=>{try{return localStorage.getItem(k)}catch(e){return null}},put=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+const TH=[['light','Woodblock 浮世絵','#e6e0cf'],['dark','Neon ネオン','#0b0820'],['samurai','Samurai 侍','#0e0d0d'],['ninja','Ninja 忍','#090d0a'],['geisha','Geisha 芸者','#efd5d6'],['kabuki','Kabuki 歌舞伎','#f6e6b0'],['dragon','Dragon 龍','#1a0606'],['koi','Koi 鯉','#150e0a'],['imperial','Imperial 皇室','#ede6f5'],['kitsune','Kitsune 狐','#05061a']];
+const sleep=ms=>new Promise(r=>setTimeout(r,ms)),rnd=n=>Math.random()*n|0;
+const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const fmt=t=>(t/60|0)+':'+String(t%60).padStart(2,'0');
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function setTheme(t){
+  document.documentElement.dataset.theme=t;put(KEY+'-t',t);
+  document.querySelector('meta[name=theme-color]').content=(TH.find(x=>x[0]==t)||TH[0])[2];
+  if(typeof onTheme=='function')onTheme();
+}
+function toggleDys(){
+  const on=!document.documentElement.hasAttribute('data-dys');
+  document.documentElement.toggleAttribute('data-dys',on);put('dys',on?'1':'0');
+  (document.fonts&&document.fonts.load('16px OpenDyslexic')||Promise.resolve()).catch(()=>{}).then(()=>setTheme(document.documentElement.dataset.theme));
+}
+const dysLabel=()=>'Dyslexia font: '+(document.documentElement.hasAttribute('data-dys')?'On':'Off');
+function toast(m,ms){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),ms||2400)}
+function ui(h){const o=$('#ov');o.innerHTML=h;o.classList.add('show')}
+function hideUi(){$('#ov').classList.remove('show')}
+function openMenu(){
+  ui(`<div class="card"><h2>${TITLE}</h2>${typeof menuHTML=='function'?menuHTML():''}<select id="th" aria-label="Style">${TH.map(t=>`<option value="${t[0]}"${document.documentElement.dataset.theme==t[0]?' selected':''}>${t[1]}</option>`).join('')}</select><button class="btn" data-a="dys">${dysLabel()}</button><button class="btn" data-a="close">Close</button></div>`);
+}
+$('#ov').onclick=e=>{
+  const b=e.target.closest('button');if(!b)return;const a=b.dataset.a;if(!a)return;
+  if(a=='close')hideUi();else if(a=='dys'){toggleDys();openMenu()}else if(typeof act=='function')act(a,b);
+};
+$('#ov').onchange=e=>{if(e.target.id=='th')setTheme(e.target.value)};
+$('#bm').onclick=openMenu;
+
+
+const GEN=[['線香','Incense',15,.1],['賽銭箱','Offering box',100,1],['巫女','Shrine maiden',1100,8],['灯籠','Stone lantern',12000,47],['鳥居','Torii gate',130000,260],['神木','Sacred tree',1.4e6,1400],['狐','Kitsune messenger',2e7,7800],['龍','Dragon spirit',3.3e8,44000],['月','Moon palace',5.1e9,260000],['天','The heavens',7.5e10,1.6e6]];
+const GR=1.15,MS=[10,25,50,100,150,200,250,300,350,400];
+const UPG=[
+ {id:'c1',n:'Polished bell',d:'Bell rings ×2',cost:100,t:'click',v:2},
+ {id:'g1',n:'Festival banners',d:'All production ×1.25',cost:1000,t:'all',v:1.25},
+ {id:'c2',n:'Silver clapper',d:'Bell rings ×2',cost:2000,t:'click',v:2},
+ {id:'p1',n:'Devout heart',d:'Each ring also gives 1% of your Mon per second',cost:20000,t:'pct',v:.01},
+ {id:'c3',n:'Temple gong',d:'Bell rings ×2',cost:50000,t:'click',v:2},
+ {id:'g2',n:'Sacred rope',d:'All production ×1.25',cost:50000,t:'all',v:1.25},
+ {id:'g3',n:'Spring festival',d:'All production ×1.5',cost:2e6,t:'all',v:1.5},
+ {id:'p2',n:'Holy prayer',d:'Each ring also gives +4% of your Mon per second',cost:2e6,t:'pct',v:.04},
+ {id:'g4',n:'Autumn harvest',d:'All production ×1.5',cost:1e8,t:'all',v:1.5},
+ {id:'g5',n:'Imperial blessing',d:'All production ×2',cost:5e9,t:'all',v:2},
+ {id:'g6',n:"Heaven's gate",d:'All production ×2',cost:5e11,t:'all',v:2}];
+const GIFTS=[[5,'Patient gods','Offline progress runs at full speed for up to 24 hours.'],[15,'Lucky waters','Lucky koi appear twice as often.'],[30,'Helping hand','The bell rings itself 3 times a second.'],[60,'Fair offerings','Everything in the shrine costs 5% less.'],[100,'Head start','Each ascension begins with 10,000 Mon.']];
+const ACH=[
+ ['first','初','First ring','Ring the bell',()=>G.clicks>=1],['c100','百','Devout','Ring the bell 100 times',()=>G.clicks>=100],['c2k','千','Tireless','Ring the bell 2,000 times',()=>G.clicks>=2000],
+ ['m1k','金','Small change','Earn 1,000 Mon',()=>G.life>=1e3],['m1m','富','Fortunate','Earn 1 million Mon',()=>G.life>=1e6],['m1b','宝','Wealthy','Earn 1 billion Mon',()=>G.life>=1e9],['m1t','財','Boundless','Earn 1 trillion Mon',()=>G.life>=1e12],
+ ['g10','十','Ten of a kind','Own 10 of any attendant',()=>G.gens.some(n=>n>=10)],['g50','五','Fifty of a kind','Own 50 of any attendant',()=>G.gens.some(n=>n>=50)],['all','全','Full staff','Own at least one of every attendant',()=>G.gens.every(n=>n>=1)],
+ ['mps1k','速','Steady flow','Reach 1,000 Mon per second',()=>mps()>=1e3],['mps1m','流','River of coins','Reach 1,000,000 Mon per second',()=>mps()>=1e6],
+ ['koi1','鯉','Lucky catch','Catch a lucky koi',()=>G.koi>=1],['koi20','運','Fortune favours','Catch 20 lucky koi',()=>G.koi>=20],
+ ['asc1','昇','Ascension','Ascend for the first time',()=>G.asc>=1],['asc5','神','Divine','Ascend 5 times',()=>G.asc>=5],['upg','買','Improver','Buy 8 upgrades in one run',()=>Object.keys(G.upg).length>=8]];
+const fresh=()=>({mon:0,run:0,life:0,clicks:0,gens:GEN.map(()=>0),upg:{},pts:0,asc:0,koi:0,ach:{},fz:0,fm:1,cf:0,t:Date.now(),born:Date.now(),koiAt:0});
+let G=fresh(),tab='gen',buy=1,rows=[],lastT=Date.now(),saveT=0,uiT=0,kT=0;
+const SUF=['','K','M','B','T','Qa','Qi','Sx','Sp','Oc','No','Dc'];
+function nf(n){
+  if(!isFinite(n))return '∞';if(n<1000)return n<10?(Math.round(n*10)/10).toString():Math.floor(n).toString();
+  const e=Math.floor(Math.log10(n)/3);if(e>=SUF.length)return n.toExponential(2).replace('+','');
+  const v=n/Math.pow(1000,e);return(v<10?v.toFixed(2):v<100?v.toFixed(1):v.toFixed(0))+SUF[e];
+}
+const gift=n=>G.pts>=GIFTS[n][0];
+const gmult=i=>{let m=1;for(const k of MS)if(G.gens[i]>=k)m*=2;return m};
+const allMult=()=>{let m=(1+.03*G.pts)*(1+.01*Object.keys(G.ach).length);for(const u of UPG)if(G.upg[u.id]&&u.t=='all')m*=u.v;return m};
+function mps(){let s=0;for(let i=0;i<GEN.length;i++)s+=G.gens[i]*GEN[i][3]*gmult(i);return s*allMult()*(Date.now()<G.fz?G.fm:1)}
+function clickVal(){let c=1,p=0;for(const u of UPG)if(G.upg[u.id]){if(u.t=='click')c*=u.v;if(u.t=='pct')p+=u.v}return(c+mps()*p)*(1+.03*G.pts)*(Date.now()<G.cf?50:1)}
+const disc=()=>gift(3)?.95:1;
+function cost(i,n){const b=GEN[i][2]*Math.pow(GR,G.gens[i]);return b*(Math.pow(GR,n)-1)/(GR-1)*disc()}
+function maxBuy(i){const b=GEN[i][2]*Math.pow(GR,G.gens[i])*disc();return Math.max(0,Math.floor(Math.log(G.mon*(GR-1)/b+1)/Math.log(GR)))}
+const amt=i=>buy=='max'?Math.max(1,maxBuy(i)):buy;
+function earn(v){G.mon+=v;G.run+=v;G.life+=v}
+function ring(e){
+  const v=clickVal();earn(v);G.clicks++;
+  const b=$('#bell');b.classList.add('rg');setTimeout(()=>b.classList.remove('rg'),70);
+  const q=$('#idle').getBoundingClientRect(),r=e&&e.clientX!=null?{x:e.clientX-q.left,y:e.clientY-q.top}:{x:q.width/2,y:150};
+  const f=document.createElement('span');f.className='fl';f.textContent='+'+nf(v);f.style.left=(r.x-14)+'px';f.style.top=(r.y-26)+'px';$('#idle').appendChild(f);setTimeout(()=>f.remove&&f.remove(),1000);
+  checkAch();
+}
+function buyGen(i){const n=amt(i),c=cost(i,n);if(G.mon>=c&&n>0){G.mon-=c;G.gens[i]+=n;checkAch();draw(true)}}
+function buyUpg(id){const u=UPG.find(x=>x.id==id);if(!u||G.upg[id]||G.mon<u.cost)return;G.mon-=u.cost;G.upg[id]=1;checkAch();draw(true)}
+function claimable(){return Math.max(0,Math.floor(Math.sqrt(G.life/1e6))-G.pts)}
+function ascend(){
+  const c=claimable();if(c<1)return;
+  G.pts+=c;G.asc++;G.mon=gift(4)?1e4:0;G.run=0;G.gens=GEN.map(()=>0);G.upg={};G.fz=G.cf=0;checkAch();save();hideUi();draw(true);
+}
+function checkAch(){let n=0;for(const a of ACH)if(!G.ach[a[0]]&&a[4]()){G.ach[a[0]]=Date.now();n++;toast('実績 '+a[2]+' · +1% production',3200)}return n}
+/* ---------- lucky koi ---------- */
+let koiTimer=0;
+function scheduleKoi(){clearTimeout(koiTimer);const base=(60+rnd(90))*(gift(1)?.5:1);koiTimer=setTimeout(spawnKoi,base*1000)}
+function spawnKoi(){
+  const k=$('#koi');k.style.top=(20+rnd(45))+'%';k.style.display='block';k.style.animation='none';void k.offsetWidth;k.style.animation='swim 14s linear forwards';
+  clearTimeout(spawnKoi.h);spawnKoi.h=setTimeout(()=>{k.style.display='none';scheduleKoi()},14000);
+}
+function catchKoi(){
+  const k=$('#koi');k.style.display='none';clearTimeout(spawnKoi.h);G.koi++;
+  const r=Math.random(),m=mps();
+  if(r<.5){G.fz=Date.now()+30000;G.fm=7;toast('Lucky koi: production ×7 for 30 seconds!',3500)}
+  else if(r<.85){const v=Math.max(13,m*900);earn(v);toast('Lucky koi: '+nf(v)+' Mon (15 minutes of income)!',3500)}
+  else{G.cf=Date.now()+15000;toast('Lucky koi: bell rings ×50 for 15 seconds!',3500)}
+  checkAch();scheduleKoi();draw(true);
+}
+$('#koi').addEventListener('pointerdown',catchKoi);
+/* ---------- save, offline, tick ---------- */
+function pack(){G.t=Date.now();return btoa(unescape(encodeURIComponent(JSON.stringify(G))))}
+function unpack(s){return JSON.parse(decodeURIComponent(escape(atob(s.trim()))))}
+function save(){try{localStorage.setItem('sk-s',pack())}catch(e){}}
+function load(){
+  try{const s=localStorage.getItem('sk-s');if(s){const o=unpack(s);G=Object.assign(fresh(),o);G.gens=GEN.map((_,i)=>o.gens&&o.gens[i]||0)}}catch(e){G=fresh()}
+  const el=Math.max(0,(Date.now()-G.t)/1000);if(el>60)offline(el,true);
+}
+function offline(el,show){
+  const cap=gift(0)?86400:28800,eff=gift(0)?1:.5,e=Math.min(el,cap),v=mps()*e*eff;
+  if(v>0){earn(v);if(show)ui(`<div class="card"><h2>Welcome back</h2><p>The shrine kept working for ${e>=3600?(e/3600).toFixed(1)+' hours':Math.round(e/60)+' minutes'} (${gift(0)?'full':'half'} speed): <b>+${nf(v)} Mon</b></p><button class="btn go" data-a="close">Thank you</button></div>`)}
+}
+function tick(){
+  const now=Date.now(),el=(now-lastT)/1000;lastT=now;
+  if(el>5)offline(el,true);else{const m=mps();earn(m*el);if(gift(2))earn(clickVal()*3*el)}
+  if((uiT+=el)>=.25){uiT=0;draw(false);checkAch()}
+  if((kT+=el)>=2){kT=0;if(tab=='kami'||tab=='ach')build()}
+  if((saveT+=el)>=5){saveT=0;save()}
+}
+/* ---------- drawing ---------- */
+function build(){
+  const p=$('#panel');p.innerHTML='';rows=[];
+  if(tab=='gen'){
+    p.insertAdjacentHTML('beforeend','<div class="bulk">'+[1,10,100,'max'].map(b=>`<button class="btn${buy==b?' on':''}" data-b="${b}">${b=='max'?'Max':'×'+b}</button>`).join('')+'</div>');
+    GEN.forEach((g,i)=>{const d=document.createElement('div');d.className='gr';d.dataset.i=i;d.innerHTML=`<b>${g[0]}</b><span><strong>${g[1]}</strong><i class="own"></i><br><small class="rt"></small></span><button class="btn bt"><span class="ct"></span></button>`;p.appendChild(d);rows.push(d)});
+  }else if(tab=='upg'){
+    const list=UPG.filter(u=>!G.upg[u.id]).sort((a,b)=>a.cost-b.cost).slice(0,6);
+    if(!list.length)p.innerHTML='<div class="gr done"><span>Every upgrade bought this run.</span></div>';
+    list.forEach(u=>{const d=document.createElement('div');d.className='gr';d.dataset.u=u.id;d.innerHTML=`<b>${u.t=='all'?'倍':u.t=='click'?'鈴':'祈'}</b><span><strong>${u.n}</strong><br><small>${u.d}</small></span><button class="btn bt"><span class="ct">${nf(u.cost)} Mon</span></button>`;p.appendChild(d);rows.push(d)});
+  }else if(tab=='kami'){
+    const c=claimable(),nextP=Math.pow(G.pts+c+1,2)*1e6;
+    p.innerHTML=`<div class="gr"><b>昇</b><span><strong>Ascend</strong><br><small>Reset your Mon, attendants and upgrades for permanent blessings. Each blessing adds +3% to everything, forever. You have <b>${G.pts}</b> (+${G.pts*3}%).</small></span></div>
+    <div class="gr"><span>${c>0?`Ascending now gives <b>+${c}</b> blessing${c>1?'s':''} (+${c*3}%).`:`Earn <b>${nf(Math.max(0,nextP-G.life))}</b> more Mon in total to earn your next blessing.`}</span><button class="btn bt ${c>0?'can':''}" data-asc="1" ${c>0?'':'disabled'}>Ascend</button></div>`+
+    GIFTS.map((g,i)=>`<div class="gr${gift(i)?'':' lk'}"><b>${gift(i)?'贈':'鍵'}</b><span><strong>${g[1]}</strong> <small>(${g[0]} blessings)</small><br><small>${g[2]}</small></span></div>`).join('');
+  }else{
+    const t=(Date.now()-G.born)/3600000;
+    p.innerHTML=`<div class="gr"><span><strong>Trophies ${Object.keys(G.ach).length}/${ACH.length}</strong> · each adds +1% to everything<br><small>Bell rings ${nf(G.clicks)} · lifetime ${nf(G.life)} Mon · this run ${nf(G.run)} · lucky koi ${G.koi} · ascensions ${G.asc} · playing for ${t<1?Math.round(t*60)+' minutes':t.toFixed(1)+' hours'}</small></span></div>`+
+    ACH.map(a=>`<div class="gr${G.ach[a[0]]?'':' lk'}"><b>${a[1]}</b><span><strong>${a[2]}</strong><br><small>${a[3]}</small></span></div>`).join('');
+  }
+}
+function draw(force){
+  if(force)build();
+  $('#mon').textContent=nf(G.mon)+' Mon';$('#mps').textContent=nf(mps())+' per second · bell '+nf(clickVal());
+  const fz=Date.now()<G.fz?`Frenzy ×${G.fm} · ${Math.ceil((G.fz-Date.now())/1000)}s`:Date.now()<G.cf?`Bell frenzy ×50 · ${Math.ceil((G.cf-Date.now())/1000)}s`:'';
+  $('#fz').textContent=fz;$('#info').innerHTML=`Blessings ${G.pts}<br>×${allMult().toFixed(2)} all`;
+  if(tab=='gen')rows.forEach(d=>{
+    const i=+d.dataset.i,g=GEN[i],n=amt(i),c=cost(i,n);
+    d.querySelector('.own').textContent='×'+G.gens[i];
+    const nm=MS.find(k=>G.gens[i]<k);d.querySelector('.rt').textContent=`${nf(g[3]*gmult(i)*allMult())}/s each${nm?' · ×2 at '+nm:''}`;
+    const b=d.querySelector('.bt');d.querySelector('.ct').textContent=(n>1?'×'+n+' · ':'')+nf(c)+' Mon';b.classList.toggle('can',G.mon>=c);
+    d.classList.toggle('lk',G.mon<g[2]*.5&&G.gens[i]==0);
+  });
+  else if(tab=='upg')rows.forEach(d=>d.querySelector('.bt').classList.toggle('can',G.mon>=UPG.find(u=>u.id==d.dataset.u).cost));
+}
+$('#bell').addEventListener('pointerdown',ring);
+$('#tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;tab=b.dataset.t;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));draw(true)};
+$('#panel').onclick=e=>{
+  const bb=e.target.closest('[data-b]');if(bb){buy=bb.dataset.b=='max'?'max':+bb.dataset.b;draw(true);return}
+  const btn=e.target.closest('.bt');if(!btn)return;
+  if(btn.dataset.asc){ui(`<div class="card"><h2>Ascend?</h2><p>You gain <b>+${claimable()}</b> blessing(s). Your Mon, attendants and upgrades reset. Blessings, trophies and gifts stay.</p><button class="btn go" data-a="doasc">Ascend</button><button class="btn" data-a="close">Not yet</button></div>`);return}
+  const row=btn.closest('.gr');if(row.dataset.i!==undefined)buyGen(+row.dataset.i);else if(row.dataset.u)buyUpg(row.dataset.u);
+};
+setInterval(tick,100);
+/* ---------- menu ---------- */
+function menuHTML(){return `<p>Ring the bell and hire attendants to earn Mon. Catch the lucky koi that swims by. When you've earned enough, Ascend for permanent blessings. The shrine keeps earning while you're away.</p><div class="grid2"><button class="btn" data-a="export">Export save</button><button class="btn" data-a="import">Import save</button></div><button class="btn" data-a="reset">Hard reset</button>`}
+function act(a){
+  if(a=='doasc')ascend();
+  else if(a=='export'){save();ui(`<div class="card"><h2>Export save</h2><p>Copy this text somewhere safe. Paste it into Import on any device.</p><textarea readonly id="sv">${pack()}</textarea><button class="btn" data-a="copy">Copy</button><button class="btn" data-a="menu">Back</button></div>`)}
+  else if(a=='copy'){const t=$('#sv');t.select&&t.select();try{navigator.clipboard.writeText(t.value);toast('Copied')}catch(e){document.execCommand&&document.execCommand('copy')}}
+  else if(a=='import')ui(`<div class="card"><h2>Import save</h2><p>Paste a save below. It replaces your current progress.</p><textarea id="sv"></textarea><button class="btn go" data-a="doimp">Load</button><button class="btn" data-a="menu">Back</button></div>`);
+  else if(a=='doimp'){try{const o=unpack($('#sv').value);G=Object.assign(fresh(),o);G.gens=GEN.map((_,i)=>o.gens&&o.gens[i]||0);save();hideUi();draw(true);toast('Save loaded')}catch(e){toast('That does not look like a valid save')}}
+  else if(a=='reset')ui(`<div class="card"><h2>Hard reset?</h2><p>This erases everything, including blessings and trophies.</p><button class="btn go" data-a="doreset">Erase everything</button><button class="btn" data-a="menu">Cancel</button></div>`);
+  else if(a=='doreset'){G=fresh();save();hideUi();draw(true)}
+  else if(a=='menu')openMenu();
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
+function boot(){load();lastT=Date.now();checkAch();draw(true);scheduleKoi();window.addEventListener('beforeunload',save)}
+
+setTheme(document.documentElement.dataset.theme||'light');
+if(typeof boot=='function')boot();
+</script>
+<script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))</script>
+</body>
+</html>
