@@ -72,14 +72,11 @@ button:active{transform:scale(.97)}
 .lx span{flex:1;font-size:12.5px;line-height:1.3}.lx small{opacity:.8}
 .lx.eq{outline:3px solid var(--accent)}
 .lx .btn{flex:none;min-width:84px;padding:8px 6px}
-<<<<<<< HEAD
 #ap{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top,0px));transform:translate(-50%,-160%);z-index:30;display:flex;gap:12px;align-items:center;background:var(--bg);color:var(--ink);border:3px solid var(--accent);box-shadow:0 8px 24px #0008;padding:10px 18px 10px 10px;border-radius:12px;max-width:92vw;transition:transform .45s cubic-bezier(.3,1.4,.5,1)}
 #ap.show{transform:translate(-50%,0)}
 #ap b{flex:none;width:48px;height:48px;background:var(--accent);color:var(--face);display:grid;place-items:center;font:800 26px var(--disp);border-radius:6px;transform:rotate(-4deg)}
 #ap span{display:flex;flex-direction:column;text-align:left}#ap small{font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}#ap strong{font-size:16px}#ap em{font-size:12px;font-style:normal;opacity:.85}
 .lx.lk{opacity:.4}
-=======
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
 #alb{width:100%;height:auto;border:2px solid var(--edge);border-radius:6px;background:var(--panel)}
 
 </style>
@@ -90,10 +87,7 @@ button:active{transform:scale(.97)}
   <div class="top"><h1>鯉池</h1><span class="st" id="info"></span><button id="bm" class="dysbtn" aria-label="Menu">☰</button></div>
   <div class="stage"><canvas id="cv"></canvas></div>
   <div class="bar" id="shop"></div>
-<<<<<<< HEAD
   <div id="ap"></div>
-=======
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
 </div>
 <div class="ov" id="ov"></div>
 <div id="toast"></div>
@@ -152,7 +146,6 @@ let alb=(get('kp-a')||'').padEnd(120,'0').slice(0,120);
 let bank=+get('kp-b')||0,owned=[],loadout=[],lux=[],won=false;
 try{owned=JSON.parse(get('kp-o'))||[];loadout=JSON.parse(get('kp-d'))||[]}catch(e){}
 const savePrefs=()=>{put('kp-o',JSON.stringify(owned));put('kp-d',JSON.stringify(loadout));put('kp-b',Math.floor(bank))};
-<<<<<<< HEAD
 const PC=()=>zen?5:[3,5,8][up.pel];
 const mul=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let x=Math.imul(a^a>>>15,1|a);x=x+Math.imul(x^x>>>7,61|x)^x;return((x^x>>>14)>>>0)/4294967296};
 function disc(id){if(alb[id]!='1'){alb=alb.slice(0,id)+'1'+alb.slice(id+1);put('kp-a',alb)}}
@@ -164,33 +157,15 @@ function addFish(c,p,x,y,st,keep,leg){
 const rndFish=(x,y)=>Math.random()<.01?addFish(0,0,x,y,0,null,rnd(6)):addFish(rnd(12),rnd(10),x,y,0);
 function newLevel(l){
   lost=0;lvl=l;put('kp-l',l);goal=3000*l;yen=120;earned=0;up={food:0,pel:0,tap:0};fish=[];food=[];coins=[];mons=[];fx=[];over=false;t=0;
-=======
-const PC=()=>[3,5,8][up.pel];
-const mul=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let x=Math.imul(a^a>>>15,1|a);x=x+Math.imul(x^x>>>7,61|x)^x;return((x^x>>>14)>>>0)/4294967296};
-function disc(id){if(alb[id]!='1'){alb=alb.slice(0,id)+'1'+alb.slice(id+1);put('kp-a',alb)}}
-function addFish(c,p,x,y,st,keep){
-  const f={id:++uid,c,p,st:st||0,eat:0,hung:keep?keep.hung:rnd(20),x,y,a:keep?keep.a:Math.random()*6.28,sp:50,wag:rnd(6),tx:x,ty:y,tcool:0,coinT:4+rnd(8),seg:[],seed:rnd(1e6),panic:0,dead:0,df:0};
-  const sp=LEN[f.st]/6;for(let i=0;i<7;i++)f.seg.push([x-Math.cos(f.a)*i*sp,y-Math.sin(f.a)*i*sp]);
-  disc(c*10+p);fish.push(f);return f;
-}
-const rndFish=(x,y)=>addFish(rnd(12),rnd(10),x,y,0);
-function newLevel(l){
-  lvl=l;put('kp-l',l);goal=3000*l;yen=120;earned=0;up={food:0,pel:0,tap:0};fish=[];food=[];coins=[];mons=[];fx=[];over=false;t=0;
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
   mt={kappa:38,namazu:95,crab:55};for(let i=0;i<3;i++)rndFish(70+i*110,140+rnd(180));
   lux=loadout.filter(id=>owned.includes(id)).slice(0,2).map(mkLux);won=false;
   hideUi();hud();
 }
 function upFish(f,dt){
   if(f.dead){f.df+=dt;if(f.dead==1){f.y=Math.max(30,f.y-14*dt);for(const s of f.seg)s[1]-=14*dt}return}
-<<<<<<< HEAD
   f.hung+=dt*(zen?ZH:1);f.wag+=dt*(3.5+f.sp*.05);f.panic=Math.max(0,f.panic-dt);
   if(zen&&f.hung<100){f.age+=dt;const ns=f.age<ZA[0]?0:f.age<ZA[1]?1:2;if(ns>f.st){f.st=ns;if(ns==2){stat.adult++;fx.push({txt:nameOf(f)+' is an adult!',x:f.x,y:f.y-24,t:2.5});checkAch()}}}
   if(f.hung>100){if(zen)f.hung=100;else{f.dead=1;lost++;return}}
-=======
-  f.hung+=dt;f.wag+=dt*(3.5+f.sp*.05);f.panic=Math.max(0,f.panic-dt);
-  if(f.hung>100){f.dead=1;return}
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
   let tg=null;
   if(f.hung>30){let bd=1e9;for(const fd of food)if(!fd.eaten){const d=Math.hypot(fd.x-f.x,fd.y-f.y);if(d<bd){bd=d;tg=fd}}}
   if(tg){f.tx=tg.x;f.ty=tg.y}else{f.tcool-=dt;if(f.tcool<=0||Math.hypot(f.tx-f.x,f.ty-f.y)<14){f.tx=30+rnd(W-60);f.ty=60+rnd(H-130);f.tcool=2+Math.random()*4}}
@@ -201,19 +176,11 @@ function upFish(f,dt){
   f.seg[0][0]=f.x;f.seg[0][1]=f.y;const sp=LEN[f.st]/6;
   for(let i=1;i<7;i++){const a=f.seg[i-1],b=f.seg[i],dx=b[0]-a[0],dy=b[1]-a[1],d=Math.hypot(dx,dy)||1;b[0]=a[0]+dx/d*sp;b[1]=a[1]+dy/d*sp}
   for(const fd of food)if(!fd.eaten&&Math.hypot(fd.x-f.x,fd.y-f.y)<13+f.st*3){
-<<<<<<< HEAD
     fd.eaten=1;f.hung=Math.max(0,f.hung-(zen?55:40));f.eat+=1+up.food;
     if(!zen&&f.st<2&&f.eat>=GROW[f.st]){f.st++;f.eat=0;fx.push({txt:'Grew!',x:f.x,y:f.y-18,t:1.2})}
   }
   f.coinT-=dt;
   if(!zen&&f.coinT<=0){const d=DROP[f.st];coins.push({x:f.x,y:f.y,v:d[1]*(f.leg!=null?3:1),col:f.leg!=null?'#ffd54a':d[2],age:0,id:++uid});f.coinT=d[0]*(.8+Math.random()*.5)}
-=======
-    fd.eaten=1;f.hung=Math.max(0,f.hung-40);f.eat+=1+up.food;
-    if(f.st<2&&f.eat>=GROW[f.st]){f.st++;f.eat=0;fx.push({txt:'Grew!',x:f.x,y:f.y-18,t:1.2})}
-  }
-  f.coinT-=dt;
-  if(f.coinT<=0){const d=DROP[f.st];coins.push({x:f.x,y:f.y,v:d[1],col:d[2],age:0,id:++uid});f.coinT=d[0]*(.8+Math.random()*.5)}
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
 }
 function mkLux(id){
   const u={id,x:60+rnd(W-120),y:100+rnd(260),a:Math.random()*6.28,tx:0,ty:0,tcool:0,sp:50,wag:rnd(6),seg:[],cd:{frog:3,gold:8,oyster:20,mother:60}[id]||0};
@@ -285,26 +252,17 @@ function upMon(m,dt){
   const live=fish.filter(f=>!f.dead);if(!live.length)return;
   let tg=live[0],bd=1e9;for(const f of live){const d=Math.hypot(f.x-m.x,f.y-m.y);if(d<bd){bd=d;tg=f}}
   const gd=lux.some(u=>u.id=='turtle'&&Math.hypot(u.x-m.x,u.y-m.y)<110),sp=(m.k=='kappa'?58:30)*(gd?.45:1),a=Math.atan2(tg.y-m.y,tg.x-m.x);m.x+=Math.cos(a)*sp*dt;m.y+=Math.sin(a)*sp*dt;
-<<<<<<< HEAD
   if(bd<m.r+8&&!lux.some(u=>u.id=='turtle'&&Math.hypot(u.x-tg.x,u.y-tg.y)<75)){tg.dead=2;lost++;m.eat++;m.stun=.8;fx.push({txt:'食',x:tg.x,y:tg.y,t:1})}
 }
 function step(dt){
   if(zen)return zstep(dt);
-=======
-  if(bd<m.r+8&&!lux.some(u=>u.id=='turtle'&&Math.hypot(u.x-tg.x,u.y-tg.y)<75)){tg.dead=2;m.eat++;m.stun=.8;fx.push({txt:'食',x:tg.x,y:tg.y,t:1})}
-}
-function step(dt){
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
   t+=dt;
   for(const k of['kappa','namazu','crab']){
     if((k!='kappa'&&lvl<2)||mons.length>=3)continue;
     mt[k]-=dt;if(mt[k]<=0){spawnMon(k);mt[k]=k=='kappa'?Math.max(16,42-5*lvl)+rnd(10):k=='namazu'?Math.max(60,120-12*lvl):Math.max(30,60-6*lvl)}
   }
   fish.forEach(f=>upFish(f,dt));fish=fish.filter(f=>!(f.dead==2||(f.dead==1&&f.df>3)));
-<<<<<<< HEAD
   breed(dt);stat.maxFish=Math.max(stat.maxFish,fish.filter(f=>!f.dead).length);
-=======
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
   for(const fd of food){fd.vy=Math.min(40,fd.vy+60*dt);fd.y=Math.min(H-14,fd.y+fd.vy*dt);if(fd.y>=H-14)fd.age+=dt}
   food=food.filter(f=>!f.eaten&&f.age<9);
   for(const c of coins){c.y=Math.min(H-16,c.y+46*dt);if(c.y>=H-16)c.age+=dt}
@@ -313,17 +271,10 @@ function step(dt){
   fx.forEach(f=>{f.t-=dt;f.y-=16*dt});fx=fx.filter(f=>f.t>0);
   if(earned>=goal&&!over)victory();
   else if(!over&&!fish.some(f=>!f.dead)&&yen<COST.koi)defeat();
-<<<<<<< HEAD
   if(!over&&(sv+=dt)>5){sv=0;saveGame();checkAch()}
 }
 function victory(){
   over=true;won=true;if(!lost)stat.perfect++;put('kp-s','');maxL=Math.max(maxL,lvl+1);put('kp-u',maxL);const bonus=Math.round(goal*.1);bank+=bonus;savePrefs();checkAch();
-=======
-  if(!over&&(sv+=dt)>5){sv=0;saveGame()}
-}
-function victory(){
-  over=true;won=true;put('kp-s','');maxL=Math.max(maxL,lvl+1);put('kp-u',maxL);const bonus=Math.round(goal*.1);bank+=bonus;savePrefs();
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
   ui(`<div class="card"><h2>The pond flourishes</h2><p>Level ${lvl} complete with ${fish.filter(f=>!f.dead).length} koi. Bonus +${bonus} yen banked.</p><button class="btn go" data-a="next">Level ${lvl+1} →</button><button class="btn" data-a="shop">金 Luxury shop · ${Math.floor(bank)}</button><button class="btn" data-a="album">Koi album ${alb.split('1').length-1}/120</button><button class="btn" data-a="menu">Menu</button></div>`);
 }
 function defeat(){
@@ -335,10 +286,7 @@ function hit(m){damage(m,1+up.tap)}
 function damage(m,d,auto){
   m.hp-=d;m.flash=.15;if(!auto)m.stun=.35;fx.push({txt:'-'+d,x:m.x,y:m.y-m.r,t:.6});
   if(m.hp<=0){
-<<<<<<< HEAD
     stat.kills++;if(m.k=='kappa')stat.kappa++;if(m.k=='namazu')stat.namazu++;
-=======
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
     const n=m.k=='namazu'?8:m.k=='kappa'?3:2,v=m.k=='namazu'?100:m.k=='kappa'?50:20;
     for(let i=0;i<n;i++)coins.push({x:m.x+(i-n/2)*10,y:m.y,v,col:'#e8b923',age:0,id:++uid});
     fx.push({txt:'Defeated!',x:m.x,y:m.y-24,t:1.4});mons=mons.filter(x=>x!==m);
@@ -346,10 +294,7 @@ function damage(m,d,auto){
 }
 cv.addEventListener('pointerdown',e=>{
   if(over||paused)return;const q=cv.getBoundingClientRect(),x=(e.clientX-q.left)/q.width*W,y=(e.clientY-q.top)/q.height*H;
-<<<<<<< HEAD
   if(zen)return zTap(x,y);
-=======
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
   const m=mons.find(m=>Math.hypot(m.x-x,m.y-y)<m.r+12);if(m){hit(m);return}
   const c=coins.find(c=>Math.hypot(c.x-x,c.y-y)<22);if(c){collect(c);return}
   if(yen<2){toast('Not enough yen for food');return}
@@ -357,7 +302,6 @@ cv.addEventListener('pointerdown',e=>{
 });
 function buy(k){
   if(over)return;
-<<<<<<< HEAD
   if(k=='koi'){if(yen>=COST.koi&&fish.filter(f=>!f.dead).length<14){yen-=COST.koi;const f=rndFish(40+rnd(W-80),70);fx.push({txt:f.leg!=null?'★ '+LEG[f.leg].n+' ★':COL[f.c][0]+' '+PAT[f.p],x:f.x,y:f.y+22,t:2})}}
   else{const lv=up[k],c=COST[k][lv];if(lv<2&&yen>=c){yen-=c;up[k]++}}
   hud();
@@ -365,23 +309,11 @@ function buy(k){
 $('#shop').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(zen)zbtn(b.dataset.s);else buy(b.dataset.s)};
 function shop(){
   if(zen){$('#shop').innerHTML='<button class="btn sp" data-s="fry"><b>鯉</b><small>Buy fry</small></button><button class="btn sp" data-s="wish"><b>願</b><small>Daily wish</small></button><button class="btn sp" data-s="pond"><b>池</b><small>Pond levels</small></button>';return}
-=======
-  if(k=='koi'){if(yen>=COST.koi&&fish.filter(f=>!f.dead).length<14){yen-=COST.koi;const f=rndFish(40+rnd(W-80),70);fx.push({txt:COL[f.c][0]+' '+PAT[f.p],x:f.x,y:f.y+22,t:2})}}
-  else{const lv=up[k],c=COST[k][lv];if(lv<2&&yen>=c){yen-=c;up[k]++}}
-  hud();
-}
-$('#shop').onclick=e=>{const b=e.target.closest('button');if(b)buy(b.dataset.s)};
-function shop(){
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
   const n=fish.filter(f=>!f.dead).length;
   const it=[['koi','鯉',COST.koi,`Koi ${n}/14`,n>=14],['food','餌',COST.food[up.food],`Food ${up.food+1}/3`,up.food>=2],['pel','量',COST.pel[up.pel],`Pellets ${PC()}`,up.pel>=2],['tap','打',COST.tap[up.tap],`Tap ×${1+up.tap}`,up.tap>=2]];
   $('#shop').innerHTML=it.map(([k,kj,c,l,mx])=>`<button class="btn sp" data-s="${k}" ${mx||yen<c?'disabled':''}><b>${kj}</b><small>${mx?'MAX':c+' 金'}</small><small style="opacity:.7">${l}</small></button>`).join('');
 }
-<<<<<<< HEAD
 function hud(){if(zen){$('#info').innerHTML=`禅 Zen pond · 金${Math.floor(bank)}<br>Wish: ${COL[wish.c][0]} · ${PAT[wish.p]}`;shop();return}$('#info').innerHTML=`Level ${lvl} · 金${Math.floor(yen)}<br>${Math.floor(earned)} / ${goal} earned`;shop()}
-=======
-function hud(){$('#info').innerHTML=`Level ${lvl} · 金${Math.floor(yen)}<br>${Math.floor(earned)} / ${goal} earned`;shop()}
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
 /* ---------- drawing ---------- */
 function at(seg,tt,off,len){const n=seg.length-1,x=Math.max(0,Math.min(.999,tt))*n,i=x|0,q=x-i,a=seg[i],b=seg[i+1],dx=b[0]-a[0],dy=b[1]-a[1],d=Math.hypot(dx,dy)||1;return[a[0]+dx*q-dy/d*off*len,a[1]+dy*q+dx/d*off*len]}
 function outline(seg,len){
@@ -392,11 +324,7 @@ function outline(seg,len){
 }
 function pathPts(p){g.beginPath();g.moveTo((p[0][0]+p[p.length-1][0])/2,(p[0][1]+p[p.length-1][1])/2);for(let i=0;i<p.length;i++){const a=p[i],b=p[(i+1)%p.length];g.quadraticCurveTo(a[0],a[1],(a[0]+b[0])/2,(a[1]+b[1])/2)}g.closePath()}
 function pattern(f,seg,len,c2){
-<<<<<<< HEAD
   const r=mul(f.seed),P=f.leg!=null?LEG[f.leg].p:f.p;g.fillStyle=c2;g.strokeStyle=c2;
-=======
-  const r=mul(f.seed),P=f.p;g.fillStyle=c2;g.strokeStyle=c2;
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
   const dot=(tt,o,rad)=>{const p=at(seg,tt,o,len);g.beginPath();g.arc(p[0],p[1],rad*len,0,7);g.fill()};
   if(P==1)for(let i=0;i<6;i++)dot(.18+i*.12,(r()-.5)*.2,.05+r()*.04);
   else if(P==2){dot(.22,(r()-.5)*.12,.16);dot(.48,(r()-.5)*.14,.18);dot(.72,(r()-.5)*.1,.12)}
@@ -409,14 +337,9 @@ function pattern(f,seg,len,c2){
   else if(P==9){g.globalAlpha=.55;g.lineWidth=1;for(let tt=.1;tt<.9;tt+=.09)for(const o of[-.12,0,.12]){const p=at(seg,tt,o,len);g.beginPath();g.arc(p[0],p[1],len*.05,.2,2.9);g.stroke()}g.globalAlpha=1}
 }
 function drawKoi(f,sil){
-<<<<<<< HEAD
   const len=LEN[f.st],seg=f.seg,kk=kc(f),c1=kk[0],c2=kk[1],pts=outline(seg,len),wag=Math.sin(f.wag)*.45;
   g.save();
   if(f.leg!=null&&!sil){g.globalAlpha=.2+.1*Math.sin(t*3+f.id);g.fillStyle=LEG[f.leg].g;g.beginPath();g.arc(seg[2][0],seg[2][1],len*.8,0,7);g.fill();g.globalAlpha=1}
-=======
-  const len=LEN[f.st],seg=f.seg,c1=COL[f.c][1],c2=COL[f.c][2],pts=outline(seg,len),wag=Math.sin(f.wag)*.45;
-  g.save();
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
   const tb=seg[6],tp=seg[5],td=Math.atan2(tb[1]-tp[1],tb[0]-tp[0])+wag*.6;
   g.fillStyle=sil?pal.ink:c2;g.globalAlpha=sil?.2:.75;g.beginPath();g.moveTo(tb[0],tb[1]);
   g.lineTo(tb[0]+Math.cos(td-.55)*len*.42,tb[1]+Math.sin(td-.55)*len*.42);g.lineTo(tb[0]+Math.cos(td)*len*.3,tb[1]+Math.sin(td)*len*.3);g.lineTo(tb[0]+Math.cos(td+.55)*len*.42,tb[1]+Math.sin(td+.55)*len*.42);g.closePath();g.fill();
@@ -448,12 +371,8 @@ function draw(){
   for(const f of sorted){
     if(f.dead){g.save();g.translate(f.seg[0][0],f.seg[0][1]);g.rotate(Math.PI);g.translate(-f.seg[0][0],-f.seg[0][1]);g.globalAlpha=Math.max(0,1-f.df/3)*.75;drawKoi(f,false);g.restore();continue}
     if(f.hung>60){g.globalAlpha=.8}drawKoi(f,false);g.globalAlpha=1;
-<<<<<<< HEAD
     if(f.hung>70&&!zen){g.fillStyle=pal.accent;g.font='800 15px '+pal.disp;g.textAlign='center';g.textBaseline='middle';g.fillText('!',f.x,f.y-22)}
     fishDeco(f);
-=======
-    if(f.hung>70){g.fillStyle=pal.accent;g.font='800 15px '+pal.disp;g.textAlign='center';g.textBaseline='middle';g.fillText('!',f.x,f.y-22)}
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
   }
   mons.forEach(drawMon);lux.forEach(drawLux);
   g.textAlign='center';g.textBaseline='middle';
@@ -462,7 +381,6 @@ function draw(){
 }
 /* ---------- album, menu, save ---------- */
 function album(){
-<<<<<<< HEAD
   ui(`<div class="card"><h2>鯉図鑑 Koi album</h2><p>${albN()} of 120 forms and ${legN()} of 6 legendary koi discovered. Rows are colours (${COL.map(c=>c[0]).join(', ')}), columns are patterns.</p><canvas id="alb" width="540" height="520"></canvas><button class="btn" data-a="menu">Back</button></div>`);
   drawAlb($('#alb'),null);
 }
@@ -476,14 +394,6 @@ function drawAlb(a,wh){
   for(let i=0;i<6;i++){const cx=i*54+27,cy=500,f={c:0,p:0,st:0,id:i,leg:i,seed:i*77,wag:0,seg:Array.from({length:7},(_,k)=>[cx+17-k*LEN[0]/6,cy])};drawKoi(f,leg[i]!='1')}
   g.fillStyle=pal.face;g.font='700 12px '+pal.disp;g.textAlign='left';g.textBaseline='middle';g.fillText('Legendary koi',6*54+14,500);
   if(wh){g.strokeStyle='#ffd54a';g.lineWidth=3;g.strokeRect(wh.p*54+2,wh.c*40+2,50,36)}
-=======
-  ui(`<div class="card"><h2>鯉図鑑 Koi album</h2><p>${alb.split('1').length-1} of 120 discovered. Colours (rows) × patterns (columns): ${COL.map(c=>c[0]).join(', ')}.</p><canvas id="alb" width="540" height="480"></canvas><button class="btn" data-a="menu">Back</button></div>`);
-  const a=$('#alb'),main=g;g=a.getContext('2d');
-  for(let c=0;c<12;c++)for(let p=0;p<10;p++){
-    const cx=p*54+27,cy=c*40+20,f={c,p,st:0,seed:c*131+p*17,wag:0,seg:Array.from({length:7},(_,i)=>[cx+17-i*LEN[0]/6,cy])};
-    drawKoi(f,alb[c*10+p]!='1');
-  }
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
   g=main;
 }
 function shopUI(){
@@ -494,7 +404,6 @@ function shopUI(){
 }
 function buyLux(id){const l=LUX.find(x=>x.id==id);if(!l||owned.includes(id)||bank<l.p)return;bank-=l.p;owned.push(id);if(loadout.length<2)loadout.push(id);savePrefs();shopUI()}
 function equipLux(id){if(!owned.includes(id))return;if(loadout.includes(id))loadout=loadout.filter(x=>x!=id);else{if(loadout.length>=2)loadout.shift();loadout.push(id)}savePrefs();shopUI()}
-<<<<<<< HEAD
 function menuHTML(){
   return `<button class="btn go" data-a="${zen?'pond':'zen'}">${zen?'池 Back to the Koi Pond levels':'禅 Zen pond · endless and relaxing'}</button>
   ${zen?'':`<button class="btn" data-a="shop">金 Luxury shop · bank ${Math.floor(bank)}</button><div class="grid2" style="grid-template-columns:repeat(3,1fr)">${Array.from({length:Math.min(maxL,9)},(_,i)=>`<button class="btn${i+1==lvl?' on':''}" data-a="l${i+1}">Level ${i+1}</button>`).join('')}</div>`}
@@ -509,24 +418,12 @@ function saveGame(){
   if(zen){zSave();return}
   if(over)return;
   put('kp-s',JSON.stringify({l:lvl,y:yen,e:earned,up,mt,lx:lux.map(u=>u.id),f:fish.filter(f=>!f.dead).map(f=>({c:f.c,p:f.p,leg:f.leg,st:f.st,eat:f.eat,hung:f.hung,x:f.x,y:f.y,a:f.a}))}));
-=======
-function menuHTML(){return `<button class="btn go" data-a="shop">金 Luxury shop · bank ${Math.floor(bank)}</button><div class="grid2" style="grid-template-columns:repeat(3,1fr)">${Array.from({length:Math.min(maxL,9)},(_,i)=>`<button class="btn${i+1==lvl?' on':''}" data-a="l${i+1}">Level ${i+1}</button>`).join('')}</div><button class="btn" data-a="album">鯉図鑑 Koi album ${alb.split('1').length-1}/120</button><p>Tap the water to drop food (2 yen each). Hungry koi eat it, grow, and drop coins: tap coins to collect. Spend yen on new koi (100, always a surprise colour and pattern) and upgrades. Tap monsters to fight them: 河童 kappa eats koi, 鯰 namazu swallows them, 蟹 crab steals coins.</p><button class="btn go" data-a="again">Restart level ${lvl}</button>`}
-function act(a){if(a=='again')newLevel(lvl);else if(a=='next')newLevel(lvl+1);else if(a=='menu')openMenu();else if(a=='album')album();else if(a=='shop')shopUI();else if(a.startsWith('b:'))buyLux(a.slice(2));else if(a.startsWith('e:'))equipLux(a.slice(2));else if(a[0]=='l')newLevel(+a.slice(1))}
-function saveGame(){
-  put('kp-b',Math.floor(bank));
-  if(over)return;
-  put('kp-s',JSON.stringify({l:lvl,y:yen,e:earned,up,mt,lx:lux.map(u=>u.id),f:fish.filter(f=>!f.dead).map(f=>({c:f.c,p:f.p,st:f.st,eat:f.eat,hung:f.hung,x:f.x,y:f.y,a:f.a}))}));
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
 }
 function loadGame(){
   try{const s=JSON.parse(get('kp-s'));if(!s||!s.f||!s.f.length)return false;
     lvl=s.l;goal=3000*lvl;yen=s.y;earned=s.e;up=s.up;mt=s.mt;fish=[];food=[];coins=[];mons=[];fx=[];over=false;
     lux=(s.lx||[]).map(mkLux);
-<<<<<<< HEAD
     s.f.forEach(o=>{const f=addFish(o.c,o.p,o.x,o.y,o.st,{hung:o.hung,a:o.a},o.leg);f.eat=o.eat});hud();return true}catch(e){return false}
-=======
-    s.f.forEach(o=>{const f=addFish(o.c,o.p,o.x,o.y,o.st,{hung:o.hung,a:o.a});f.eat=o.eat});hud();return true}catch(e){return false}
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
 }
 function onTheme(){const v=n=>css(n);pal={bg:v('--bg'),ink:v('--ink'),face:v('--face'),accent:v('--accent'),p1:v('--p1'),p3:v('--p3'),p5:v('--p5'),disp:v('--disp')}}
 function fit(){const w=Math.floor(Math.min(innerWidth-20,(innerHeight-250)*W/H,520));cv.style.width=w+'px';cv.style.height=(w*H/W)+'px'}
@@ -535,7 +432,6 @@ function frame(ts){
   if(!over&&!paused&&!$('#ov').classList.contains('show')){step(dt);if(Math.floor(t*4)!=Math.floor((t-dt)*4))hud()}
   draw();
 }
-<<<<<<< HEAD
 document.addEventListener('visibilitychange',()=>{paused=document.hidden;if(document.hidden)saveGame();if(AC){if(document.hidden)AC.suspend();else if(mOn)AC.resume()}});
 addEventListener('resize',fit);
 /* ---------- legendary koi, breeding, achievements ---------- */
@@ -730,11 +626,6 @@ function setMusic(on){
 }
 addEventListener('pointerdown',()=>{if(mOn&&!AC)startMusic();else if(mOn&&AC&&AC.state==='suspended')AC.resume()},{passive:true});
 function boot(){fit();if(get('kp-mode')=='z')enterZen();else if(!loadGame())newLevel(Math.min(lvl,maxL));requestAnimationFrame(frame)}
-=======
-document.addEventListener('visibilitychange',()=>{paused=document.hidden;if(document.hidden)saveGame()});
-addEventListener('resize',fit);
-function boot(){fit();if(!loadGame())newLevel(Math.min(lvl,maxL));requestAnimationFrame(frame)}
->>>>>>> f7c3ef69225205f0bbeffe8496ed1f9866a2ddba
 
 setTheme(document.documentElement.dataset.theme||'light');
 if(typeof boot=='function')boot();
